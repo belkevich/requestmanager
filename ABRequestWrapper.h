@@ -26,4 +26,5 @@
 - (id)initWithURLRequest:(NSURLRequest *)aRequest
                 delegate:(NSObject <ABRequestDelegate> *)aDelegate;
 
+
 @end

@@ -21,5 +21,7 @@
 // actions
 - (ABRequestWrapper *)wrapperWithPath:(NSString *)path
                              delegate:(NSObject <ABRequestDelegate> *)delegate;
+- (ABRequestWrapper *)wrapperWithURL:(NSURL *)url
+                            delegate:(NSObject <ABRequestDelegate> *)delegate;
 
 @end
