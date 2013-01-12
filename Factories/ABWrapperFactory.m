@@ -34,7 +34,13 @@
                              delegate:(NSObject <ABRequestDelegate> *)delegate
 {
     NSURL *fullURL = [self fullURLWithPath:path];
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:fullURL];
+    return [self wrapperWithURL:fullURL delegate:delegate];
+}
+
+- (ABRequestWrapper *)wrapperWithURL:(NSURL *)url
+                            delegate:(NSObject <ABRequestDelegate> *)delegate
+{
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     ABRequestWrapper *wrapper = [[ABRequestWrapper alloc] initWithURLRequest:request
                                                                     delegate:delegate];
     [request release];
