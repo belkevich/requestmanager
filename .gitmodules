@@ -1,3 +1,6 @@
 [submodule "Externals/ABMultiton"]
 	path = Externals/ABMultiton
 	url = git@git.okolodev.org:belkevich/multiton.git
+[submodule "Externals/SCNetworkReachability"]
+	path = Externals/SCNetworkReachability
+	url = https://github.com/belkevich/reachability-ios.git
