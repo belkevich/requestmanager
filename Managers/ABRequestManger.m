@@ -7,6 +7,7 @@
 //
 
 #import "ABRequestManger.h"
+#import "ABMultiton.h"
 #import "ABConnectionHelper.h"
 #import "ABRequestWrapper.h"
 #import "NSMutableArray+Queue.h"
@@ -39,6 +40,15 @@
     [super dealloc];
 }
 
+#pragma mark -
+#pragma mark singleton protocol implementation
+
++ (instancetype)sharedInstance
+{
+    return [ABMultiton sharedInstanceOfClass:[self class]];
+}
+
+#pragma mark -
 #pragma mark actions
 
 - (void)sendRequest:(ABRequestWrapper *)request

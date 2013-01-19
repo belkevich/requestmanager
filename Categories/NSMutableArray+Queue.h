@@ -1,6 +1,6 @@
 //
 //  NSMutableArray+Queue.h
-//  NetworkTest
+//  Request Manager
 //
 //  Created by Alexey Belkevich on 12/30/12.
 //  Copyright (c) 2012 Okolodev. All rights reserved.

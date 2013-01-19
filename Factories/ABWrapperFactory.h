@@ -1,17 +1,18 @@
 //
 //  ABWrapperFactory.h
-//  NetworkTest
+//  Request Manager
 //
 //  Created by Alexey Belkevich on 12/31/12.
 //  Copyright (c) 2012 Okolodev. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
+#import "ABSingletonProtocol.h"
 #import "ABRequestDelegate.h"
 
 @class ABRequestWrapper;
 
-@interface ABWrapperFactory : NSObject
+@interface ABWrapperFactory : NSObject <ABSingletonProtocol>
 {
     NSString *host;
 }

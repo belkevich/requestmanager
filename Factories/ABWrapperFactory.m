@@ -1,12 +1,13 @@
 //
 //  ABWrapperFactory.m
-//  NetworkTest
+//  Request Manager
 //
 //  Created by Alexey Belkevich on 12/31/12.
 //  Copyright (c) 2012 Okolodev. All rights reserved.
 //
 
 #import "ABWrapperFactory.h"
+#import "ABMultiton.h"
 #import "ABRequestWrapper.h"
 #import "NSURL+Host.h"
 
@@ -25,6 +26,14 @@
 {
     [host release];
     [super dealloc];
+}
+
+#pragma mark -
+#pragma mark singleton protocol implementation
+
++ (instancetype)sharedInstance
+{
+    return [ABMultiton sharedInstanceOfClass:[self class]];
 }
 
 #pragma mark -

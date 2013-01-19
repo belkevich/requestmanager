@@ -7,12 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "ABSingletonProtocol.h"
 #import "ABConnectionDelegate.h"
 
 @class ABConnectionHelper;
 @class ABRequestWrapper;
 
-@interface ABRequestManager : NSObject <ABConnectionDelegate>
+@interface ABRequestManager : NSObject <ABSingletonProtocol, ABConnectionDelegate>
 {
     NSMutableArray *queue;
     ABConnectionHelper *helper;
