@@ -13,11 +13,6 @@
 @class ABRequestWrapper;
 
 @interface ABWrapperFactory : NSObject <ABSingletonProtocol>
-{
-    NSString *host;
-}
-
-@property (nonatomic, retain) NSString *host;
 
 // actions
 - (ABRequestWrapper *)wrapperWithPath:(NSString *)path

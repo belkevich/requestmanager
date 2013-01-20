@@ -9,14 +9,18 @@
 #import <Foundation/Foundation.h>
 #import "ABSingletonProtocol.h"
 #import "ABConnectionDelegate.h"
+#import "ABReachabilityDelegate.h"
 
 @class ABConnectionHelper;
 @class ABRequestWrapper;
+@class ABReachabilityHelper;
 
-@interface ABRequestManager : NSObject <ABSingletonProtocol, ABConnectionDelegate>
+@interface ABRequestManager : NSObject
+<ABSingletonProtocol, ABConnectionDelegate, ABReachabilityDelegate>
 {
     NSMutableArray *queue;
-    ABConnectionHelper *helper;
+    ABConnectionHelper *connection;
+    ABReachabilityHelper *reachability;
 }
 
 // actions

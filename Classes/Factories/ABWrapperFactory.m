@@ -9,6 +9,7 @@
 #import "ABWrapperFactory.h"
 #import "ABMultiton.h"
 #import "ABRequestWrapper.h"
+#import "ABRequestOptions.h"
 #import "NSURL+Host.h"
 
 @interface ABWrapperFactory ()
@@ -16,17 +17,6 @@
 @end
 
 @implementation ABWrapperFactory
-
-@synthesize host;
-
-#pragma mark -
-#pragma mark main routine
-
-- (void)dealloc
-{
-    [host release];
-    [super dealloc];
-}
 
 #pragma mark -
 #pragma mark singleton protocol implementation
@@ -61,6 +51,7 @@
 
 - (NSURL *)fullURLWithPath:(NSString *)path
 {
+    NSString *host = [ABRequestOptions sharedInstance].baseHost;
     return host ? [NSURL URLWithHost:host path:path] : [NSURL URLWithFullPath:path];
 }
 
