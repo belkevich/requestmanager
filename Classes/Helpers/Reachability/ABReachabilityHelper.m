@@ -7,14 +7,12 @@
 //
 
 #import "ABReachabilityHelper.h"
-#import "ABRequestOptions.h"
 #import "SCNetworkReachability.h"
 
 #define AB_DEFAULT_REACHABILITY             @"http://google.com"
 
 @interface ABReachabilityHelper ()
 @property (nonatomic, readonly) SCNetworkReachability *reachability;
-- (NSString *)reachabilityHost;
 @end
 
 
@@ -47,13 +45,7 @@
 - (BOOL)isReachable
 {
     SCNetworkStatus status = [reachability status];
-    BOOL reachable = NO;
-    if (status != SCNetworkStatusNotReachable)
-    {
-        reachable = ![ABRequestOptions sharedInstance].isWiFiOnly ? YES :
-        (status == SCNetworkStatusReachableViaWiFi);
-    }
-    return reachable;
+    return (status != SCNetworkStatusNotReachable);
 }
 
 #pragma mark -
@@ -73,17 +65,10 @@
 {
     if (!reachability)
     {
-        NSString *host = [self reachabilityHost];
-        reachability = [[SCNetworkReachability alloc] initWithHostName:host];
+        reachability = [[SCNetworkReachability alloc] initWithHostName:AB_DEFAULT_REACHABILITY];
         reachability.delegate = self;
     }
     return reachability;
-}
-
-- (NSString *)reachabilityHost
-{
-    ABRequestOptions *options = [ABRequestOptions sharedInstance];
-    return options.baseHost ? options.baseHost : AB_DEFAULT_REACHABILITY;
 }
 
 @end

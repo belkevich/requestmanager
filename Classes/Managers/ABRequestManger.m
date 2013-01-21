@@ -10,9 +10,9 @@
 #import "ABMultiton.h"
 #import "ABConnectionHelper.h"
 #import "ABRequestWrapper.h"
-#import "ABRequestOptions.h"
 #import "ABReachabilityHelper.h"
 #import "NSMutableArray+Queue.h"
+#import "NSError+Reachability.h"
 
 @interface ABRequestManager ()
 - (void)runHeadRequest;
@@ -90,18 +90,7 @@
 
 - (void)reachabilityDidChange:(BOOL)reachable
 {
-    if (reachable)
-    {
-        [self runHeadRequest];
-    }
-    else
-    {
-        [self connectionRelease];
-        if ([ABRequestOptions sharedInstance].connectionLostAction == ABConnectionLostActionClean)
-        {
-            [queue removeAllObjects];
-        }
-    }
+    reachable ? [self runHeadRequest] : [self connectionRelease];
 }
 
 #pragma mark -
@@ -118,7 +107,8 @@
     }
     else
     {
-#warning add error
+        NSError *error = [NSError errorReachabilityLost];
+        [wrapper.delegate wrapper:wrapper didReceiveError:error];
     }
 }
 

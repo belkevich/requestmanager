@@ -9,12 +9,8 @@
 #import "ABWrapperFactory.h"
 #import "ABMultiton.h"
 #import "ABRequestWrapper.h"
-#import "ABRequestOptions.h"
 #import "NSURL+Host.h"
 
-@interface ABWrapperFactory ()
-- (NSURL *)fullURLWithPath:(NSString *)path;
-@end
 
 @implementation ABWrapperFactory
 
@@ -32,8 +28,8 @@
 - (ABRequestWrapper *)wrapperWithPath:(NSString *)path
                              delegate:(NSObject <ABRequestDelegate> *)delegate
 {
-    NSURL *fullURL = [self fullURLWithPath:path];
-    return [self wrapperWithURL:fullURL delegate:delegate];
+    NSURL *pathURL = [NSURL URLWithString:path];
+    return [self wrapperWithURL:pathURL delegate:delegate];
 }
 
 - (ABRequestWrapper *)wrapperWithURL:(NSURL *)url
@@ -44,15 +40,6 @@
                                                                     delegate:delegate];
     [request release];
     return [wrapper autorelease];
-}
-
-#pragma mark -
-#pragma mark private
-
-- (NSURL *)fullURLWithPath:(NSString *)path
-{
-    NSString *host = [ABRequestOptions sharedInstance].baseHost;
-    return host ? [NSURL URLWithHost:host path:path] : [NSURL URLWithFullPath:path];
 }
 
 @end
