@@ -64,6 +64,25 @@
     }
 }
 
+- (void)removeRequestWrapper:(ABRequestWrapper *)request
+{
+    NSInteger index = [queue indexOfObject:request];
+    if (index != NSNotFound)
+    {
+        [queue removeObject:request];
+        if (index == 0)
+        {
+            [self connectionRelease];
+        }
+    }
+}
+
+- (void)removeAllRequestWrappers
+{
+    [queue removeAllObjects];
+    [self connectionRelease];
+}
+
 #pragma mark -
 #pragma mark connection delegate method
 

@@ -25,5 +25,7 @@
 
 // actions
 - (void)sendRequestWrapper:(ABRequestWrapper *)request;
+- (void)removeRequestWrapper:(ABRequestWrapper *)request;
+- (void)removeAllRequestWrappers;
 
 @end
