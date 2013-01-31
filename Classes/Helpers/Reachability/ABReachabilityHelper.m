@@ -9,7 +9,7 @@
 #import "ABReachabilityHelper.h"
 #import "SCNetworkReachability.h"
 
-#define AB_DEFAULT_REACHABILITY             @"http://google.com"
+#define AB_DEFAULT_REACHABILITY             @"google.com"
 
 @interface ABReachabilityHelper ()
 @property (nonatomic, readonly) SCNetworkReachability *reachability;
@@ -44,7 +44,7 @@
 
 - (BOOL)isReachable
 {
-    SCNetworkStatus status = [reachability status];
+    SCNetworkStatus status = [self.reachability status];
     return (status != SCNetworkStatusNotReachable);
 }
 
