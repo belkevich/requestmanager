@@ -55,7 +55,7 @@
 #pragma mark -
 #pragma mark actions
 
-- (void)sendRequest:(ABRequestWrapper *)request
+- (void)sendRequestWrapper:(ABRequestWrapper *)request
 {
     [queue addObject:request];
     if (queue.count == 1)
