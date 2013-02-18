@@ -24,6 +24,7 @@
 @property (nonatomic, readonly) NSError *error;
 
 // initialization
+- (id)initWithURLRequest:(NSURLRequest *)aRequest;
 - (id)initWithURLRequest:(NSURLRequest *)aRequest
                 delegate:(NSObject <ABRequestDelegate> *)aDelegate;
 // actions

@@ -16,12 +16,21 @@
 #pragma mark main routine
 
 - (id)initWithURLRequest:(NSURLRequest *)aRequest
-                delegate:(NSObject <ABRequestDelegate> *)aDelegate
 {
     self = [super init];
     if (self)
     {
         request = [aRequest retain];
+    }
+    return self;
+}
+
+- (id)initWithURLRequest:(NSURLRequest *)aRequest
+                delegate:(NSObject <ABRequestDelegate> *)aDelegate
+{
+    self = [self initWithURLRequest:aRequest];
+    if (self)
+    {
         delegate = aDelegate;
     }
     return self;
