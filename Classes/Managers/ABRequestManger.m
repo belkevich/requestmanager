@@ -41,7 +41,6 @@
 {
     [self connectionRelease];
     [queue release];
-    NSLog(@"reachability - %d", reachability.retainCount);
     [reachability release];
     [super dealloc];
 }
