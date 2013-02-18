@@ -13,18 +13,22 @@
 {
     NSURLRequest *request;
     NSObject <ABRequestDelegate> *delegate;
-    id response;
+    NSHTTPURLResponse *httpResponse;
+    id receivedResponse;
     NSError *error;
 }
 
 @property (nonatomic, readonly) NSURLRequest *request;
-@property (nonatomic, assign) NSObject <ABRequestDelegate> *delegate;
-@property (nonatomic, retain) id response;
-@property (nonatomic, retain) NSError *error;
+@property (nonatomic, readonly) NSHTTPURLResponse *httpResponse;
+@property (nonatomic, readonly) id receivedResponse;
+@property (nonatomic, readonly) NSError *error;
 
 // initialization
 - (id)initWithURLRequest:(NSURLRequest *)aRequest
                 delegate:(NSObject <ABRequestDelegate> *)aDelegate;
-
+// actions
+- (void)setReceivedResponse:(id)aReceivedResponse httpResponse:(NSHTTPURLResponse *)aHTTPResponse;
+- (void)setReceivedError:(NSError *)anError;
+- (void)resetDelegate;
 
 @end

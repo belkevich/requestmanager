@@ -10,7 +10,7 @@
 
 @implementation ABRequestWrapper
 
-@synthesize request, delegate;
+@synthesize request, httpResponse, receivedResponse, error;
 
 #pragma mark -
 #pragma mark main routine
@@ -30,42 +30,34 @@
 - (void)dealloc
 {
     [request release];
-    [response release];
+    [httpResponse release];
+    [receivedResponse release];
     [error release];
     [super dealloc];
 }
 
 #pragma mark -
-#pragma mark dynamic properties
+#pragma mark actions
 
-@dynamic response, error;
-
-- (id)response
+- (void)setReceivedResponse:(id)aReceivedResponse httpResponse:(NSHTTPURLResponse *)aHTTPResponse
 {
-    return response;
+    [receivedResponse release];
+    [httpResponse release];
+    receivedResponse = [aReceivedResponse retain];
+    httpResponse = [aHTTPResponse retain];
+    [delegate wrapper:self didReceiveResponse:receivedResponse];
 }
 
-- (NSError *)error
-{
-    return error;
-}
-
-- (void)setResponse:(id)aResponse
-{
-    [response release];
-    response = [aResponse retain];
-    [delegate wrapper:self didReceiveResponse:response];
-}
-
-- (void)setError:(NSError *)anError
+- (void)setReceivedError:(NSError *)anError
 {
     [error release];
     error = [anError retain];
-    if ([delegate respondsToSelector:@selector(wrapper:didReceiveError:)])
-    {
-        [delegate wrapper:self didReceiveError:error];
-    }
+    [delegate wrapper:self didReceiveError:error];
 }
 
+- (void)resetDelegate
+{
+    delegate = nil;
+}
 
 @end

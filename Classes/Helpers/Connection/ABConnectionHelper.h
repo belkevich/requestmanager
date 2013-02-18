@@ -14,6 +14,7 @@
     NSObject <ABConnectionDelegate> *delegate;
     NSURLRequest *request;
     NSURLConnection *connection;
+    NSHTTPURLResponse *receivedResponse;
     NSMutableData *receivedData;
 }
 
@@ -22,5 +23,6 @@
              delegate:(NSObject <ABConnectionDelegate> *)aDelegate;
 // actions
 - (void)start;
+- (void)stop;
 
 @end

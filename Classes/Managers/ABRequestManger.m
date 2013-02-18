@@ -16,7 +16,8 @@
 
 @interface ABRequestManager ()
 - (void)runHeadRequest;
-- (void)parseData:(NSData *)data forWrapper:(ABRequestWrapper *)wrapper;
+- (void)parseData:(NSData *)data response:(NSHTTPURLResponse *)response
+       forWrapper:(ABRequestWrapper *)wrapper;
 - (void)connectionRelease;
 @end
 
@@ -40,6 +41,7 @@
 {
     [self connectionRelease];
     [queue release];
+    NSLog(@"reachability - %d", reachability.retainCount);
     [reachability release];
     [super dealloc];
 }
@@ -74,6 +76,7 @@
         {
             [self connectionRelease];
         }
+        [self runHeadRequest];
     }
 }
 
@@ -90,18 +93,15 @@
 {
     [self connectionRelease];
     ABRequestWrapper *wrapper = [queue headPop];
-    wrapper.error = error;
+    [wrapper setReceivedError:error];
 }
 
-- (void)connectionDidReceiveData:(NSData *)receivedData
+- (void)connectionDidReceiveData:(NSData *)receivedData response:(NSHTTPURLResponse *)response
 {
     [self connectionRelease];
     ABRequestWrapper *request = [queue headPop];
-    [self parseData:receivedData forWrapper:request];
-    if (queue.count > 0)
-    {
-        [self runHeadRequest];
-    }
+    [self parseData:receivedData response:response forWrapper:request];
+    [self runHeadRequest];
 }
 
 #pragma mark -
@@ -118,26 +118,31 @@
 - (void)runHeadRequest
 {
     ABRequestWrapper *wrapper = [queue head];
-    if (reachability.isReachable)
+    if (wrapper)
     {
-        [self connectionRelease];
-        connection = [[ABConnectionHelper alloc] initWithRequest:wrapper.request delegate:self];
-        [connection start];
-    }
-    else
-    {
-        NSError *error = [NSError errorReachabilityLost];
-        [wrapper.delegate wrapper:wrapper didReceiveError:error];
+        if (reachability.isReachable)
+        {
+            [self connectionRelease];
+            connection = [[ABConnectionHelper alloc] initWithRequest:wrapper.request delegate:self];
+            [connection start];
+        }
+        else
+        {
+            NSError *error = [NSError errorReachabilityLost];
+            [wrapper setReceivedError:error];
+        }
     }
 }
 
-- (void)parseData:(NSData *)data forWrapper:(ABRequestWrapper *)wrapper
+- (void)parseData:(NSData *)data response:(NSHTTPURLResponse *)response
+       forWrapper:(ABRequestWrapper *)wrapper
 {
-    wrapper.response = data;
+    [wrapper setReceivedResponse:data httpResponse:response];
 }
 
 - (void)connectionRelease
-{    
+{
+    [connection stop];
     [connection release];
     connection = nil;
 }
