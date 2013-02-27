@@ -17,5 +17,6 @@
 
 @optional
 - (void)wrapper:(ABRequestWrapper *)wrapper didReceiveError:(NSError *)error;
+- (void)wrapperDidBecomeUnreachable:(ABRequestWrapper *)wrapper;
 
 @end

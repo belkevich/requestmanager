@@ -64,6 +64,11 @@
     [delegate wrapper:self didReceiveError:error];
 }
 
+- (void)setUnreachable
+{
+    [delegate wrapperDidBecomeUnreachable:self];
+}
+
 - (void)resetDelegate
 {
     delegate = nil;

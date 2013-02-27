@@ -12,7 +12,6 @@
 #import "ABRequestWrapper.h"
 #import "ABReachabilityHelper.h"
 #import "NSMutableArray+Queue.h"
-#import "NSError+Reachability.h"
 
 @interface ABRequestManager ()
 - (void)runHeadRequest;
@@ -108,7 +107,16 @@
 
 - (void)reachabilityDidChange:(BOOL)reachable
 {
-    reachable ? [self runHeadRequest] : [self connectionRelease];
+    if (reachable)
+    {
+        [self runHeadRequest];
+    }
+    else
+    {
+        [self connectionRelease];
+        ABRequestWrapper *wrapper = [queue head];
+        [wrapper setUnreachable];
+    }
 }
 
 #pragma mark -
@@ -127,8 +135,7 @@
         }
         else
         {
-            NSError *error = [NSError errorReachabilityLost];
-            [wrapper setReceivedError:error];
+            [wrapper setUnreachable];
         }
     }
 }

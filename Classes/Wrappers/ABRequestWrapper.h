@@ -30,6 +30,7 @@
 // actions
 - (void)setReceivedResponse:(id)aReceivedResponse httpResponse:(NSHTTPURLResponse *)aHTTPResponse;
 - (void)setReceivedError:(NSError *)anError;
+- (void)setUnreachable;
 - (void)resetDelegate;
 
 @end
