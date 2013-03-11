@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "ABRequestDelegate.h"
+#import "ABParsingHelper.h"
 
 @interface ABRequestWrapper : NSObject
 {
@@ -16,6 +17,7 @@
     NSHTTPURLResponse *httpResponse;
     id receivedResponse;
     NSError *error;
+    ABParsingHelper *parsingHelper;
 }
 
 @property (nonatomic, readonly) NSURLRequest *request;
@@ -27,8 +29,11 @@
 - (id)initWithURLRequest:(NSURLRequest *)aRequest;
 - (id)initWithURLRequest:(NSURLRequest *)aRequest
                 delegate:(NSObject <ABRequestDelegate> *)aDelegate;
+// parsing block
+- (void)setParsingBlock:(ABParsingBlock)parsingBlock;
 // actions
-- (void)setReceivedResponse:(id)aReceivedResponse httpResponse:(NSHTTPURLResponse *)aHTTPResponse;
+- (void)setReceivedResponse:(NSData *)aReceivedResponse
+               httpResponse:(NSHTTPURLResponse *)aHTTPResponse;
 - (void)setReceivedError:(NSError *)anError;
 - (void)setUnreachable;
 - (void)resetDelegate;

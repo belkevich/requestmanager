@@ -8,6 +8,10 @@
 
 #import "ABRequestWrapper.h"
 
+@interface ABRequestWrapper ()
+- (void)parseReceivedData:(NSData *)data;
+@end
+
 @implementation ABRequestWrapper
 
 @synthesize request, httpResponse, receivedResponse, error;
@@ -42,18 +46,33 @@
     [httpResponse release];
     [receivedResponse release];
     [error release];
+    [parsingHelper release];
     [super dealloc];
+}
+
+#pragma mark -
+#pragma mark parsing block
+
+- (void)setParsingBlock:(ABParsingBlock)parsingBlock
+{
+    if (!parsingHelper)
+    {
+        parsingHelper = [[ABParsingHelper alloc] init];
+    }
+    parsingHelper.parsingBlock = parsingBlock;
 }
 
 #pragma mark -
 #pragma mark actions
 
-- (void)setReceivedResponse:(id)aReceivedResponse httpResponse:(NSHTTPURLResponse *)aHTTPResponse
+- (void)setReceivedResponse:(NSData *)aReceivedResponse
+               httpResponse:(NSHTTPURLResponse *)aHTTPResponse
 {
     [receivedResponse release];
     [httpResponse release];
     receivedResponse = [aReceivedResponse retain];
     httpResponse = [aHTTPResponse retain];
+    parsingHelper ? [self parseReceivedData:aReceivedResponse]:
     [delegate wrapper:self didReceiveResponse:receivedResponse];
 }
 
@@ -72,6 +91,22 @@
 - (void)resetDelegate
 {
     delegate = nil;
+}
+
+#pragma mark -
+#pragma mark private
+
+- (void)parseReceivedData:(NSData *)data
+{
+    [parsingHelper parseData:data
+             completionBlock:^(id parsedResult) {
+                 if (parsedResult)
+                 {
+                     [receivedResponse release];
+                     receivedResponse = [parsedResult retain];
+                     [delegate wrapper:self didReceiveResponse:receivedResponse];
+                 }
+             }];
 }
 
 @end
