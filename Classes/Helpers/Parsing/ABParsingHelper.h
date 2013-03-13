@@ -20,6 +20,6 @@ typedef void (^ ABCompleteBlock)(id parsedResult);
 @property (nonatomic, copy) ABParsingBlock parsingBlock;
 
 // actions
-- (void)parseData:(NSData *)data completionBlock:(ABCompleteBlock)completionBlock;
+- (void)runParsingBlockWithData:(NSData *)data completionBlock:(ABCompleteBlock)completionBlock;
 
 @end

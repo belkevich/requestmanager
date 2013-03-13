@@ -98,15 +98,15 @@
 
 - (void)parseReceivedData:(NSData *)data
 {
-    [parsingHelper parseData:data
-             completionBlock:^(id parsedResult) {
-                 if (parsedResult)
-                 {
-                     [receivedResponse release];
-                     receivedResponse = [parsedResult retain];
-                     [delegate wrapper:self didReceiveResponse:receivedResponse];
-                 }
-             }];
+    id completionBlock = ^(id parsedResult) {
+        if (parsedResult)
+        {
+            [receivedResponse release];
+            receivedResponse = [parsedResult retain];
+            [delegate wrapper:self didReceiveResponse:receivedResponse];
+        }
+    };
+    [parsingHelper runParsingBlockWithData:data completionBlock:completionBlock];
 }
 
 @end

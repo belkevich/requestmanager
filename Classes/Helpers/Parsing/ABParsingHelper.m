@@ -36,7 +36,7 @@
 #pragma mark -
 #pragma mark actions
 
-- (void)parseData:(NSData *)data completionBlock:(ABCompleteBlock)completionBlock
+- (void)runParsingBlockWithData:(NSData *)data completionBlock:(ABCompleteBlock)completionBlock
 {
     if (parsingBlock)
     {
