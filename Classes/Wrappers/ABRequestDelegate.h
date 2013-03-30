@@ -14,9 +14,9 @@
 
 @required
 - (void)wrapper:(ABRequestWrapper *)wrapper didReceiveResponse:(id)response;
+- (void)wrapper:(ABRequestWrapper *)wrapper didReceiveError:(NSError *)error;
 
 @optional
-- (void)wrapper:(ABRequestWrapper *)wrapper didReceiveError:(NSError *)error;
 - (void)wrapperDidBecomeUnreachable:(ABRequestWrapper *)wrapper;
 
 @end

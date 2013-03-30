@@ -7,12 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ABSingletonProtocol.h"
 #import "ABRequestDelegate.h"
 
 @class ABRequestWrapper;
 
-@interface ABWrapperFactory : NSObject <ABSingletonProtocol>
+@interface ABWrapperFactory : NSObject
 
 // actions
 - (ABRequestWrapper *)wrapperWithPath:(NSString *)path

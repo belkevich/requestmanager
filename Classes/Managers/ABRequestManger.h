@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ABSingletonProtocol.h"
+#import "ABMultitonProtocol.h"
 #import "ABConnectionDelegate.h"
 #import "ABReachabilityDelegate.h"
 
@@ -16,7 +16,7 @@
 @class ABReachabilityHelper;
 
 @interface ABRequestManager : NSObject
-<ABSingletonProtocol, ABConnectionDelegate, ABReachabilityDelegate>
+<ABMultitonProtocol, ABConnectionDelegate, ABReachabilityDelegate>
 {
     NSMutableArray *queue;
     ABConnectionHelper *connection;

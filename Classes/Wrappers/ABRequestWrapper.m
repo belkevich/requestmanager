@@ -9,12 +9,20 @@
 #import "ABRequestWrapper.h"
 
 @interface ABRequestWrapper ()
-- (void)parseReceivedData:(NSData *)data;
+
+@property (nonatomic, retain, readwrite) NSURLRequest *request;
+@property (nonatomic, retain, readwrite) NSHTTPURLResponse *response;
+@property (nonatomic, retain, readwrite) id data;
+@property (nonatomic, retain, readwrite) NSError *error;
+@property (nonatomic, retain, readonly) ABBlockHelper *blockHelper;
+
+- (void)parseReceivedData:(NSData *)aData;
+- (void)returnReceivedData:(id)aData;
 @end
 
 @implementation ABRequestWrapper
 
-@synthesize request, httpResponse, receivedResponse, error;
+@synthesize request, response, data, error;
 
 #pragma mark -
 #pragma mark main routine
@@ -24,7 +32,7 @@
     self = [super init];
     if (self)
     {
-        request = [aRequest retain];
+        self.request = aRequest;
     }
     return self;
 }
@@ -42,49 +50,58 @@
 
 - (void)dealloc
 {
-    [request release];
-    [httpResponse release];
-    [receivedResponse release];
-    [error release];
-    [parsingHelper release];
+    self.request = nil;
+    self.response = nil;
+    self.data = nil;
+    self.error = nil;
+    [blockHelper release];
     [super dealloc];
 }
 
 #pragma mark -
-#pragma mark parsing block
+#pragma mark blocks
 
-- (void)setParsingBlock:(ABParsingBlock)parsingBlock
+- (void)setCompleteBlock:(ABRequestCompletedBlock)completeBlock
+               failBlock:(ABRequestFailedBlock)failBlock
 {
-    if (!parsingHelper)
+    if (!delegate)
     {
-        parsingHelper = [[ABParsingHelper alloc] init];
+        self.blockHelper.completeBlock = completeBlock;
+        self.blockHelper.failBlock = failBlock;
     }
-    parsingHelper.parsingBlock = parsingBlock;
+    else
+    {
+        @throw [NSException exceptionWithName:@"Setted block and delegate"
+                                       reason:@"Block can't be setted if delegate setted"
+                                     userInfo:nil];
+    }
+}
+
+- (void)setParsingBlock:(ABParsingDataBlock)parsingBlock
+{
+    self.blockHelper.parsingBlock = parsingBlock;
 }
 
 #pragma mark -
 #pragma mark actions
 
-- (void)setReceivedResponse:(NSData *)aReceivedResponse
-               httpResponse:(NSHTTPURLResponse *)aHTTPResponse
+- (void)setReceivedData:(NSData *)aData
+               response:(NSHTTPURLResponse *)aResponse
 {
-    [receivedResponse release];
-    [httpResponse release];
-    receivedResponse = [aReceivedResponse retain];
-    httpResponse = [aHTTPResponse retain];
-    parsingHelper ? [self parseReceivedData:aReceivedResponse]:
-    [delegate wrapper:self didReceiveResponse:receivedResponse];
+    self.response = aResponse;
+    blockHelper.parsingBlock ? [self parseReceivedData:aData] : [self returnReceivedData:aData];
 }
 
 - (void)setReceivedError:(NSError *)anError
 {
-    [error release];
-    error = [anError retain];
-    [delegate wrapper:self didReceiveError:error];
+    self.error = anError;
+    blockHelper ? [blockHelper runFailBlockWithError:self.error unreachable:NO]:
+    [delegate wrapper:self didReceiveError:self.error];
 }
 
 - (void)setUnreachable
 {
+    blockHelper ? [blockHelper runFailBlockWithError:nil unreachable:YES]:
     [delegate wrapperDidBecomeUnreachable:self];
 }
 
@@ -94,19 +111,43 @@
 }
 
 #pragma mark -
+#pragma mark properties
+
+- (ABBlockHelper *)blockHelper
+{
+    if (!blockHelper)
+    {
+        blockHelper = [[ABBlockHelper alloc] init];
+    }
+    return blockHelper;
+}
+
+#pragma mark -
 #pragma mark private
 
-- (void)parseReceivedData:(NSData *)data
+- (void)parseReceivedData:(NSData *)aData
 {
-    id completionBlock = ^(id parsedResult) {
+    id completionBlock = ^(id parsedResult)
+    {
         if (parsedResult)
         {
-            [receivedResponse release];
-            receivedResponse = [parsedResult retain];
-            [delegate wrapper:self didReceiveResponse:receivedResponse];
+            [self returnReceivedData:parsedResult];
         }
     };
-    [parsingHelper runParsingBlockWithData:data completionBlock:completionBlock];
+    [self.blockHelper runParsingBlockWithData:aData completionBlock:completionBlock];
+}
+
+- (void)returnReceivedData:(id)aData
+{
+    self.data = aData;
+    if (delegate)
+    {
+        [delegate wrapper:self didReceiveResponse:self.data];
+    }
+    else if (blockHelper.completeBlock)
+    {
+        [self.blockHelper runCompleteBlockWithData:self.response response:self.data];
+    }
 }
 
 @end

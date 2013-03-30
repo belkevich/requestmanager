@@ -143,7 +143,7 @@
 - (void)parseData:(NSData *)data response:(NSHTTPURLResponse *)response
        forWrapper:(ABRequestWrapper *)wrapper
 {
-    [wrapper setReceivedResponse:data httpResponse:response];
+    [wrapper setReceivedData:data response:response];
 }
 
 - (void)connectionRelease
