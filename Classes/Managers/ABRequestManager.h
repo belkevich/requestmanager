@@ -24,8 +24,8 @@
 }
 
 // actions
-- (void)sendRequestWrapper:(ABRequestWrapper *)request;
-- (void)removeRequestWrapper:(ABRequestWrapper *)request;
+- (void)sendRequestWrapper:(ABRequestWrapper *)wrapper;
+- (void)removeRequestWrapper:(ABRequestWrapper *)wrapper;
 - (void)removeAllRequestWrappers;
 
 @end

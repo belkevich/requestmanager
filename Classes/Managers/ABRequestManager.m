@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 Okolodev. All rights reserved.
 //
 
-#import "ABRequestManger.h"
+#import "ABRequestManager.h"
 #import "ABMultiton.h"
 #import "ABConnectionHelper.h"
 #import "ABRequestWrapper.h"
@@ -55,21 +55,21 @@
 #pragma mark -
 #pragma mark actions
 
-- (void)sendRequestWrapper:(ABRequestWrapper *)request
+- (void)sendRequestWrapper:(ABRequestWrapper *)wrapper
 {
-    [queue addObject:request];
+    [queue addObject:wrapper];
     if (queue.count == 1)
     {
         [self runHeadRequest];
     }
 }
 
-- (void)removeRequestWrapper:(ABRequestWrapper *)request
+- (void)removeRequestWrapper:(ABRequestWrapper *)wrapper
 {
-    NSInteger index = [queue indexOfObject:request];
+    NSInteger index = [queue indexOfObject:wrapper];
     if (index != NSNotFound)
     {
-        [queue removeObject:request];
+        [queue removeObject:wrapper];
         if (index == 0)
         {
             [self connectionRelease];
