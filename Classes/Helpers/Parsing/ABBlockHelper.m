@@ -29,7 +29,7 @@
     if (self)
     {
         NSString *name = [NSString stringWithFormat:@"lock queue %d", self.hash];
-        self.lockQueue = dispatch_queue_create([name UTF8String], NULL);
+        lockQueue = dispatch_queue_create([name UTF8String], NULL);
     }
     return self;
 }
