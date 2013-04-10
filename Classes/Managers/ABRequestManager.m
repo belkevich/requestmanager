@@ -73,8 +73,8 @@
         if (index == 0)
         {
             [self connectionRelease];
+            [self runHeadRequest];
         }
-        [self runHeadRequest];
     }
 }
 
@@ -82,6 +82,22 @@
 {
     [queue removeAllObjects];
     [self connectionRelease];
+}
+
+- (void)removeRequest:(NSURLRequest *)request
+{
+    NSIndexSet *indexSet = [queue indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger idx,
+                                                                    BOOL *stop)
+    {
+        ABRequestWrapper *wrapper = obj;
+        return (wrapper.request == request);
+    }];
+    [queue removeObjectsAtIndexes:indexSet];
+    if ([indexSet containsIndex:0])
+    {
+        [self connectionRelease];
+        [self runHeadRequest];
+    }
 }
 
 #pragma mark -

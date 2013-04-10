@@ -49,4 +49,10 @@
     [wrapper release];
 }
 
+- (void)cancelRequest
+{
+    [[ABRequestManager sharedInstance] removeRequest:self];
+}
+
+
 @end

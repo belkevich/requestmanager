@@ -19,5 +19,6 @@
 - (void)startWithCompleteBlock:(ABRequestCompletedBlock)completeBlock
                      failBlock:(ABRequestFailedBlock)failBlock
                   parsingBlock:(ABParsingDataBlock)parsingBlock;
+- (void)cancelRequest;
 
 @end
