@@ -27,12 +27,4 @@
     return head;
 }
 
-- (void)headRemove
-{
-    if (self.count > 0)
-    {
-        [self removeObjectAtIndex:0];
-    }
-}
-
 @end

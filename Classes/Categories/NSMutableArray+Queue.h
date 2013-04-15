@@ -12,6 +12,5 @@
 
 - (id)head;
 - (id)headPop;
-- (void)headRemove;
 
 @end
