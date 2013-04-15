@@ -13,10 +13,10 @@
 @protocol ABRequestDelegate <NSObject>
 
 @required
-- (void)wrapper:(ABRequestWrapper *)wrapper didReceiveResponse:(id)response;
-- (void)wrapper:(ABRequestWrapper *)wrapper didReceiveError:(NSError *)error;
+- (void)request:(NSURLRequest *)request didReceiveResponse:(id)response;
+- (void)request:(NSURLRequest *)request didReceiveError:(NSError *)error;
 
 @optional
-- (void)wrapperDidBecomeUnreachable:(ABRequestWrapper *)wrapper;
+- (void)requestDidBecomeUnreachable:(NSURLRequest *)request;
 
 @end

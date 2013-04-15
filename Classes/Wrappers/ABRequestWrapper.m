@@ -96,18 +96,13 @@
 {
     self.error = anError;
     blockHelper ? [blockHelper runFailBlockWithError:self.error unreachable:NO]:
-    [delegate wrapper:self didReceiveError:self.error];
+    [delegate request:self.request didReceiveError:self.error];
 }
 
 - (void)setUnreachable
 {
     blockHelper ? [blockHelper runFailBlockWithError:nil unreachable:YES]:
-    [delegate wrapperDidBecomeUnreachable:self];
-}
-
-- (void)resetDelegate
-{
-    delegate = nil;
+    [delegate requestDidBecomeUnreachable:self.request];
 }
 
 #pragma mark -
@@ -142,7 +137,7 @@
     self.data = aData;
     if (delegate)
     {
-        [delegate wrapper:self didReceiveResponse:self.data];
+        [delegate request:self.request didReceiveResponse:self.data];
     }
     else if (blockHelper.completeBlock)
     {

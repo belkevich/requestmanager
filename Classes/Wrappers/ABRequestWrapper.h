@@ -33,6 +33,5 @@
 - (void)setReceivedData:(NSData *)aData response:(NSHTTPURLResponse *)aResponse;
 - (void)setReceivedError:(NSError *)anError;
 - (void)setUnreachable;
-- (void)resetDelegate;
 
 @end
