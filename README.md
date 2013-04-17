@@ -12,8 +12,7 @@ cd <project source directory>
 git submodule add https://github.com/belkevich/requestmanager.git <request manager directory>
 git submodule update --init --recursive
 ```
-Add `<request manager directory>` to your XCode project. 
-Then add `SystemConfiguration.framework` to project `Target` -> `Build phases` -> `Link Binary With Libraries`
+Add `<request manager directory>` to your XCode project. Then add `SystemConfiguration.framework` to project `Target` -> `Build phases` -> `Link Binary With Libraries`
 
 # Using
 ## Send request with delegate
@@ -43,10 +42,11 @@ You should use it in most cases.
 }
 ...
 ```
+> ### Note
+> Request delegate isn't retained by request manager. It means that if you don't sure that request completes before delegate deallocated you would cancel request 
 
 ## Send request with blocks
-It looks shorter but code isn't as clear as with delegate. Also beware of retain cycles when using
-`self` in blocks.
+It looks shorter but code isn't as clear as with delegate.
 ```objective-c
 #import "NSURLRequest+RequestManager.h"
 ...
@@ -67,6 +67,8 @@ It looks shorter but code isn't as clear as with delegate. Also beware of retain
 }
 
 ```
+> ### Note
+> Beware of retain cycles when using `self`
 
 ## Parse received data
 If received data needs to be parsed asynchronously, use `parsing block`
@@ -80,9 +82,14 @@ NSURLRequest *request = [NSURLRequest requestWithURL:someURL];
     ...
 }];
 ```
+> ### Note
+> All actions in block will run in background thread! Try to avoid calling objects used in main thread. Otherwise you should synchronize calls
 
 ## Cancel request
 Request will be removed from requests queue. Connection will be dropped if it runs
 ```objective-c
 [request cancelRequest];
 ```
+
+# Request manager specs
+[Here is BDD specs](https://github.com/belkevich/requestmanager-spec) 
