@@ -16,8 +16,7 @@ Add `<request manager directory>` to your XCode project. Then add `SystemConfigu
 
 # Using
 ## Send request with delegate
-Sending request with delegate is an better way to manage requests. Because source code looks clear.
-You should use it in most cases.
+Sending request with delegate is an better way to manage requests. Because source code looks clear. You should use it in most cases.
 ```objective-c
 #import "NSURLRequest+RequestManager.h"
 ...
@@ -42,7 +41,7 @@ You should use it in most cases.
 }
 ...
 ```
-> ### Note
+### Note
 > Request delegate isn't retained by request manager. It means that if you don't sure that request completes before delegate deallocated you would cancel request 
 
 ## Send request with blocks
@@ -67,7 +66,7 @@ It looks shorter but code isn't as clear as with delegate.
 }
 
 ```
-> ### Note
+### Note
 > Beware of retain cycles when using `self`
 
 ## Parse received data
@@ -82,7 +81,7 @@ NSURLRequest *request = [NSURLRequest requestWithURL:someURL];
     ...
 }];
 ```
-> ### Note
+### Note
 > All actions in block will run in background thread! Try to avoid calling objects used in main thread. Otherwise you should synchronize calls
 
 ## Cancel request
