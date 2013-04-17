@@ -21,5 +21,4 @@
 - (NSMutableURLRequest *)createRequest:(NSURL *)requestURL method:(NSString *)method
                                   data:(NSData *)data;
 
-
 @end

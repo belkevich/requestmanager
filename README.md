@@ -105,5 +105,16 @@ Sometimes it can be useful to restart unfinished request when internet connectio
 ### Note
 > If you don't implement this method delegate will receive `request:didReceiveError:` on internet connection lost
 
+## Request creation
+It's easy to create request with `ABRequestFactory`
+```objective-c
+ABRequestFactory *factory = [ABRequestFactory requestFactory];
+NSMutableURLRequest *requestGET = [factory createGETRequest:url];
+NSMutableURLRequest *requestPOST = [factory createPOSTRequest:url data:data];
+NSMutableURLRequest *requestPUT = [factory createPUTRequest:url data:data];
+NSMutableURLRequest *requestDELETE = [factory createDELETERequest:url];
+NSMutableURLRequest *requestCustom = [factory createRequest:url method:@"method" data:data];
+```
+
 # Request manager specs
 [Here is BDD specs](https://github.com/belkevich/requestmanager-spec) 
