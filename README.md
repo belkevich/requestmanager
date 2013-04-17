@@ -42,7 +42,7 @@ Sending request with delegate is an better way to manage requests. Because sourc
 ...
 ```
 ### Note
-> Request delegate isn't retained by request manager. It means that if you don't sure that request completes before delegate deallocated you would cancel request 
+> Request delegate isn't retained by request manager. It means that if you don't sure that request completes before delegate deallocated you must cancel request 
 
 ## Send request with blocks
 It looks shorter but code isn't as clear as with delegate.
@@ -89,6 +89,21 @@ Request will be removed from requests queue. Connection will be dropped if it ru
 ```objective-c
 [request cancelRequest];
 ```
+
+## Internet reachability
+Sometimes it can be useful to restart unfinished request when internet connection become available. But when internet lost, request will be removed from queue. To avoid this you can restart request by implementing optional method of `ABRequestDelegate`
+```objective-c
+...
+- (void)requestDidBecomeUnreachable:(NSURLRequest *)request
+{
+    // restart request
+    // it will be added to the end of requests queue
+    [request startWithDelegate:self];
+    ...
+}
+```
+### Note
+> If you don't implement this method delegate will receive `request:didReceiveError:` on internet connection lost
 
 # Request manager specs
 [Here is BDD specs](https://github.com/belkevich/requestmanager-spec) 

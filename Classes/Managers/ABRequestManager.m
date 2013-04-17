@@ -130,7 +130,7 @@
     else
     {
         [self connectionRelease];
-        ABRequestWrapper *wrapper = [queue head];
+        ABRequestWrapper *wrapper = [queue headPop];
         [wrapper setUnreachable];
     }
 }
