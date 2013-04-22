@@ -101,8 +101,18 @@
 
 - (void)setUnreachable
 {
-    blockHelper ? [blockHelper runFailBlockWithError:nil unreachable:YES]:
-    [delegate requestDidBecomeUnreachable:self.request];
+    if (blockHelper)
+    {
+        [blockHelper runFailBlockWithError:nil unreachable:YES];
+    }
+    else if ([delegate respondsToSelector:@selector(requestDidBecomeUnreachable:)])
+    {
+        [delegate requestDidBecomeUnreachable:self.request];
+    }
+    else
+    {
+        [delegate request:self.request didReceiveError:nil];
+    }
 }
 
 #pragma mark -
