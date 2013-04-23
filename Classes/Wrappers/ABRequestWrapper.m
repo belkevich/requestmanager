@@ -7,6 +7,7 @@
 //
 
 #import "ABRequestWrapper.h"
+#import "NSError+Reachability.h"
 
 @interface ABRequestWrapper ()
 
@@ -111,7 +112,8 @@
     }
     else
     {
-        [delegate request:self.request didReceiveError:nil];
+        NSError *error = [NSError errorReachability];
+        [delegate request:self.request didReceiveError:error];
     }
 }
 
