@@ -8,8 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-@class ABRequestWrapper;
-
 @protocol ABRequestDelegate <NSObject>
 
 @required

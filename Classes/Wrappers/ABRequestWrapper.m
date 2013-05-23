@@ -7,41 +7,45 @@
 //
 
 #import "ABRequestWrapper.h"
+#import "ABBlockHelper.h"
 #import "NSError+Reachability.h"
 
 @interface ABRequestWrapper ()
 
+// override property accessors
 @property (nonatomic, retain, readwrite) NSURLRequest *request;
 @property (nonatomic, retain, readwrite) NSHTTPURLResponse *response;
-@property (nonatomic, retain, readwrite) id data;
+@property (nonatomic, retain, readwrite) NSData *data;
 @property (nonatomic, retain, readwrite) NSError *error;
-@property (nonatomic, retain, readonly) ABBlockHelper *blockHelper;
+// blocks
+@property (nonatomic, retain, readwrite) ABBlockHelper *blockHelper;
 
-- (void)parseReceivedData:(NSData *)aData;
-- (void)returnReceivedData:(id)aData;
+- (void)parseReceivedData;
+- (void)returnReceivedResult:(id)result;
+
 @end
 
 @implementation ABRequestWrapper
 
-@synthesize request, response, data, error;
 
 #pragma mark -
 #pragma mark main routine
 
-- (id)initWithURLRequest:(NSURLRequest *)aRequest
+- (id)initWithURLRequest:(NSURLRequest *)request
 {
     self = [super init];
     if (self)
     {
-        self.request = aRequest;
+        self.request = request;
+        self.blockHelper = [[[ABBlockHelper alloc] init] autorelease];
     }
     return self;
 }
 
-- (id)initWithURLRequest:(NSURLRequest *)aRequest
-                delegate:(NSObject <ABRequestDelegate> *)aDelegate
+- (id)initWithURLRequest:(NSURLRequest *)request
+                delegate:(NSObject <ABWrapperDelegate> *)aDelegate
 {
-    self = [self initWithURLRequest:aRequest];
+    self = [self initWithURLRequest:request];
     if (self)
     {
         delegate = aDelegate;
@@ -55,20 +59,20 @@
     self.response = nil;
     self.data = nil;
     self.error = nil;
-    [blockHelper release];
+    self.blockHelper = nil;
     [super dealloc];
 }
 
 #pragma mark -
 #pragma mark blocks
 
-- (void)setCompleteBlock:(ABRequestCompletedBlock)completeBlock
-               failBlock:(ABRequestFailedBlock)failBlock
+- (void)setCompletedBlock:(ABWrapperCompletedBlock)completedBlock
+              failedBlock:(ABWrapperFailedBlock)failedBlock
 {
     if (!delegate)
     {
-        self.blockHelper.completeBlock = completeBlock;
-        self.blockHelper.failBlock = failBlock;
+        self.blockHelper.completedBlock = completedBlock;
+        self.blockHelper.failedBlock = failedBlock;
     }
     else
     {
@@ -78,7 +82,7 @@
     }
 }
 
-- (void)setParsingBlock:(ABParsingDataBlock)parsingBlock
+- (void)setParsingBlock:(ABWrapperDataParsingBlock)parsingBlock
 {
     self.blockHelper.parsingBlock = parsingBlock;
 }
@@ -86,74 +90,66 @@
 #pragma mark -
 #pragma mark actions
 
-- (void)setReceivedData:(NSData *)aData
-               response:(NSHTTPURLResponse *)aResponse
+- (void)setReceivedData:(NSData *)data
+               response:(NSHTTPURLResponse *)response
 {
-    self.response = aResponse;
-    blockHelper.parsingBlock ? [self parseReceivedData:aData] : [self returnReceivedData:aData];
+    self.data = data;
+    self.response = response;
+    self.blockHelper.parsingBlock ? [self parseReceivedData] : [self returnReceivedResult:data];
 }
 
 - (void)setReceivedError:(NSError *)anError
 {
     self.error = anError;
-    blockHelper ? [blockHelper runFailBlockWithError:self.error unreachable:NO]:
-    [delegate request:self.request didReceiveError:self.error];
+    delegate ? [delegate requestWrapper:self didFail:self.error] :
+    [self.blockHelper runFailedBlockWithWrapper:self unreachable:NO];
 }
 
 - (void)setUnreachable
 {
-    if (blockHelper)
+    if (delegate)
     {
-        [blockHelper runFailBlockWithError:nil unreachable:YES];
-    }
-    else if ([delegate respondsToSelector:@selector(requestDidBecomeUnreachable:)])
-    {
-        [delegate requestDidBecomeUnreachable:self.request];
+        if ([delegate respondsToSelector:@selector(requestWrapperDidBecomeUnreachable:)])
+        {
+            [delegate requestWrapperDidBecomeUnreachable:self];
+        }
+        else
+        {
+            NSError *error = [NSError errorReachability];
+            [delegate requestWrapper:self didFail:error];
+        }
     }
     else
     {
-        NSError *error = [NSError errorReachability];
-        [delegate request:self.request didReceiveError:error];
+        [self.blockHelper runFailedBlockWithWrapper:nil unreachable:YES];
     }
-}
-
-#pragma mark -
-#pragma mark properties
-
-- (ABBlockHelper *)blockHelper
-{
-    if (!blockHelper)
-    {
-        blockHelper = [[ABBlockHelper alloc] init];
-    }
-    return blockHelper;
 }
 
 #pragma mark -
 #pragma mark private
 
-- (void)parseReceivedData:(NSData *)aData
+- (void)parseReceivedData
 {
+    __block ABRequestWrapper *weakSelf = self;
     id completionBlock = ^(id parsedResult)
     {
         if (parsedResult)
         {
-            [self returnReceivedData:parsedResult];
+            [weakSelf returnReceivedResult:parsedResult];
         }
     };
-    [self.blockHelper runParsingBlockWithData:aData completionBlock:completionBlock];
+    [self.blockHelper runParsingBlockWithWrapper:self callbackBlock:completionBlock];
 }
 
-- (void)returnReceivedData:(id)aData
+- (void)returnReceivedResult:(id)result
 {
-    self.data = aData;
     if (delegate)
     {
-        [delegate request:self.request didReceiveResponse:self.data];
+        [delegate requestWrapper:self didFinish:result];
     }
-    else if (blockHelper.completeBlock)
+    else if (self.blockHelper)
     {
-        [self.blockHelper runCompleteBlockWithData:self.response response:self.data];
+        [self.blockHelper runCompletedBlockWithWrapper:self result:result];
     }
 }
 

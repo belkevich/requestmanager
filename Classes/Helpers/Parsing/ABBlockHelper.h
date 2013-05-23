@@ -7,22 +7,20 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "ABWrapperBlocks.h"
 
-typedef void (^ABRequestCompletedBlock)(NSHTTPURLResponse *response, id data);
-typedef void (^ABRequestFailedBlock)(NSError *error, BOOL isUnreachable);
-typedef id (^ABParsingDataBlock)(NSData *data);
-typedef void (^ABParsingCompleteBlock)(id parsedResult);
+typedef void (^ABParsingCompleteBlock)(id result);
 
 @interface ABBlockHelper : NSObject
 
-@property (nonatomic, copy, readwrite) ABRequestCompletedBlock completeBlock;
-@property (nonatomic, copy, readwrite) ABRequestFailedBlock failBlock;
-@property (nonatomic, copy, readwrite) ABParsingDataBlock parsingBlock;
+@property (nonatomic, copy, readwrite) ABWrapperCompletedBlock completedBlock;
+@property (nonatomic, copy, readwrite) ABWrapperFailedBlock failedBlock;
+@property (nonatomic, copy, readwrite) ABWrapperDataParsingBlock parsingBlock;
 
 // actions
-- (void)runCompleteBlockWithData:(id)data response:(NSHTTPURLResponse *)response;
-- (void)runFailBlockWithError:(NSError *)error unreachable:(BOOL)isUnreachable;
-- (void)runParsingBlockWithData:(NSData *)data
-                completionBlock:(ABParsingCompleteBlock)completionBlock;
+- (void)runCompletedBlockWithWrapper:(ABRequestWrapper *)wrapper result:(id)result;
+- (void)runFailedBlockWithWrapper:(ABRequestWrapper *)wrapper unreachable:(BOOL)isUnreachable;
+- (void)runParsingBlockWithWrapper:(ABRequestWrapper *)wrapper
+                     callbackBlock:(ABParsingCompleteBlock)callbackBlock;
 
 @end

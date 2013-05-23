@@ -7,46 +7,45 @@
 //
 
 #import "NSURLRequest+RequestManager.h"
+#import "NSError+Reachability.h"
+#import "ABRequestWrapper.h"
 #import "ABRequestManager.h"
 
 @implementation NSURLRequest (RequestManager)
 
-- (void)startWithDelegate:(NSObject <ABRequestDelegate> *)delegate
-{
-    ABRequestWrapper *wrapper = [[ABRequestWrapper alloc] initWithURLRequest:self
-                                                                    delegate:delegate];
-    [[ABRequestManager sharedInstance] sendRequestWrapper:wrapper];
-    [wrapper release];
-}
+#pragma mark -
+#pragma mark public
 
 - (void)startWithDelegate:(NSObject <ABRequestDelegate> *)delegate
-             parsingBlock:(ABParsingDataBlock)parsingBlock
 {
-    ABRequestWrapper *wrapper = [[ABRequestWrapper alloc] initWithURLRequest:self
-                                                                    delegate:delegate];
-    [wrapper setParsingBlock:parsingBlock];
+    ABRequestWrapper *wrapper = [self wrapperWithRequestDelegate:delegate];
     [[ABRequestManager sharedInstance] sendRequestWrapper:wrapper];
-    [wrapper release];
 }
 
-- (void)startWithCompleteBlock:(ABRequestCompletedBlock)completeBlock
-                     failBlock:(ABRequestFailedBlock)failBlock
+- (void)startWithDelegate:(NSObject <ABRequestDelegate> *)delegate
+             parsingBlock:(ABRequestDataParsingBlock)parsingBlock
 {
-    ABRequestWrapper *wrapper = [[ABRequestWrapper alloc] initWithURLRequest:self];
-    [wrapper setCompleteBlock:completeBlock failBlock:failBlock];
+    ABRequestWrapper *wrapper = [self wrapperWithRequestDelegate:delegate];
+    [self setParsingBlock:parsingBlock toWrapper:wrapper];
     [[ABRequestManager sharedInstance] sendRequestWrapper:wrapper];
-    [wrapper release];
 }
 
-- (void)startWithCompleteBlock:(ABRequestCompletedBlock)completeBlock
-                     failBlock:(ABRequestFailedBlock)failBlock
-                  parsingBlock:(ABParsingDataBlock)parsingBlock
+- (void)startWithCompletedBlock:(ABRequestCompletedBlock)completedBlock
+                    failedBlock:(ABRequestFailedBlock)failedBlock
 {
-    ABRequestWrapper *wrapper = [[ABRequestWrapper alloc] initWithURLRequest:self];
-    [wrapper setCompleteBlock:completeBlock failBlock:failBlock];
-    [wrapper setParsingBlock:parsingBlock];
+    ABRequestWrapper *wrapper = [self wrapperWithCompletedBlock:completedBlock
+                                                    failedBlock:failedBlock];
     [[ABRequestManager sharedInstance] sendRequestWrapper:wrapper];
-    [wrapper release];
+}
+
+- (void)startWithCompletedBlock:(ABRequestCompletedBlock)completedBlock
+                    failedBlock:(ABRequestFailedBlock)failedBlock
+                   parsingBlock:(ABRequestDataParsingBlock)parsingBlock
+{
+    ABRequestWrapper *wrapper = [self wrapperWithCompletedBlock:completedBlock
+                                                    failedBlock:failedBlock];
+    [self setParsingBlock:parsingBlock toWrapper:wrapper];
+    [[ABRequestManager sharedInstance] sendRequestWrapper:wrapper];
 }
 
 - (void)cancelRequest
@@ -54,5 +53,64 @@
     [[ABRequestManager sharedInstance] removeRequest:self];
 }
 
+#pragma mark -
+#pragma mark private
+
+- (ABRequestWrapper *)wrapperWithRequestDelegate:(NSObject <ABRequestDelegate> *)delegate
+{
+    __block NSObject <ABRequestDelegate> *weakDelegate = delegate;
+    ABRequestWrapper *theWrapper = [[ABRequestWrapper alloc] initWithURLRequest:self];
+    [theWrapper setCompletedBlock:^(ABRequestWrapper *wrapper, id result)
+    {
+        [weakDelegate request:wrapper.request didReceiveResponse:result];
+    }                 failedBlock:^(ABRequestWrapper *wrapper, BOOL isUnreachable)
+    {
+        if (isUnreachable)
+        {
+            if ([weakDelegate respondsToSelector:@selector(requestDidBecomeUnreachable:)])
+            {
+                [weakDelegate requestDidBecomeUnreachable:wrapper.request];
+            }
+            else
+            {
+                NSError *error = [NSError errorReachability];
+                [weakDelegate request:wrapper.request didReceiveError:error];
+            }
+        }
+        else
+        {
+            [weakDelegate request:wrapper.request didReceiveError:wrapper.error];
+        }
+    }];
+    return [theWrapper autorelease];
+}
+
+- (ABRequestWrapper *)wrapperWithCompletedBlock:(ABRequestCompletedBlock)completedBlock
+                                    failedBlock:(ABRequestFailedBlock)failedBlock
+{
+    ABRequestWrapper *theWrapper = [[ABRequestWrapper alloc] initWithURLRequest:self];
+    [theWrapper setCompletedBlock:^(ABRequestWrapper *wrapper, id result)
+    {
+        if (completedBlock)
+        {
+            completedBlock(wrapper.response, result);
+        }
+    }                 failedBlock:^(ABRequestWrapper *wrapper, BOOL isUnreachable)
+    {
+        if (failedBlock)
+        {
+            failedBlock(wrapper.error, isUnreachable);
+        }
+    }];
+    return [theWrapper autorelease];
+}
+
+- (void)setParsingBlock:(ABRequestDataParsingBlock)block toWrapper:(ABRequestWrapper *)theWrapper
+{
+    [theWrapper setParsingBlock:^id(ABRequestWrapper *wrapper)
+    {
+        return (block) ? block(wrapper.data) : nil;
+    }];
+}
 
 @end

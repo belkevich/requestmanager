@@ -7,30 +7,29 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ABRequestDelegate.h"
-#import "ABBlockHelper.h"
+#import "ABWrapperDelegate.h"
+#import "ABWrapperBlocks.h"
 
 @interface ABRequestWrapper : NSObject
 {
-    NSObject <ABRequestDelegate> *delegate;
-    ABBlockHelper *blockHelper;
+    NSObject <ABWrapperDelegate> *delegate;
 }
 
 @property (nonatomic, retain, readonly) NSURLRequest *request;
 @property (nonatomic, retain, readonly) NSHTTPURLResponse *response;
-@property (nonatomic, retain, readonly) id data;
+@property (nonatomic, retain, readonly) NSData *data;
 @property (nonatomic, retain, readonly) NSError *error;
 
 // initialization
-- (id)initWithURLRequest:(NSURLRequest *)aRequest;
-- (id)initWithURLRequest:(NSURLRequest *)aRequest
-                delegate:(NSObject <ABRequestDelegate> *)aDelegate;
+- (id)initWithURLRequest:(NSURLRequest *)request;
+- (id)initWithURLRequest:(NSURLRequest *)request
+                delegate:(NSObject <ABWrapperDelegate> *)delegate;
 // blocks
-- (void)setCompleteBlock:(ABRequestCompletedBlock)completeBlock
-               failBlock:(ABRequestFailedBlock)failBlock;
-- (void)setParsingBlock:(ABParsingDataBlock)parsingBlock;
+- (void)setCompletedBlock:(ABWrapperCompletedBlock)completedBlock
+              failedBlock:(ABWrapperFailedBlock)failedBlock;
+- (void)setParsingBlock:(ABWrapperDataParsingBlock)parsingBlock;
 // actions
-- (void)setReceivedData:(NSData *)aData response:(NSHTTPURLResponse *)aResponse;
+- (void)setReceivedData:(NSData *)data response:(NSHTTPURLResponse *)response;
 - (void)setReceivedError:(NSError *)anError;
 - (void)setUnreachable;
 

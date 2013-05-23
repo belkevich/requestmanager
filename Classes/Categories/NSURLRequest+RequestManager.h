@@ -7,18 +7,23 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ABRequestWrapper.h"
+#import "ABRequestDelegate.h"
+
+typedef void (^ABRequestCompletedBlock)(NSHTTPURLResponse *response, id result);
+typedef void (^ABRequestFailedBlock)(NSError *error, BOOL isUnreachable);
+typedef id (^ABRequestDataParsingBlock)(NSData *data);
+
 
 @interface NSURLRequest (RequestManager)
 
 - (void)startWithDelegate:(NSObject <ABRequestDelegate> *)delegate;
 - (void)startWithDelegate:(NSObject <ABRequestDelegate> *)delegate
-             parsingBlock:(ABParsingDataBlock)parsingBlock;
-- (void)startWithCompleteBlock:(ABRequestCompletedBlock)completeBlock
-                     failBlock:(ABRequestFailedBlock)failBlock;
-- (void)startWithCompleteBlock:(ABRequestCompletedBlock)completeBlock
-                     failBlock:(ABRequestFailedBlock)failBlock
-                  parsingBlock:(ABParsingDataBlock)parsingBlock;
+             parsingBlock:(ABRequestDataParsingBlock)parsingBlock;
+- (void)startWithCompletedBlock:(ABRequestCompletedBlock)completedBlock
+                    failedBlock:(ABRequestFailedBlock)failedBlock;
+- (void)startWithCompletedBlock:(ABRequestCompletedBlock)completedBlock
+                    failedBlock:(ABRequestFailedBlock)failedBlock
+                   parsingBlock:(ABRequestDataParsingBlock)parsingBlock;
 - (void)cancelRequest;
 
 @end

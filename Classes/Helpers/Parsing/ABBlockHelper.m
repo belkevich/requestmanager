@@ -7,10 +7,11 @@
 //
 
 #import "ABBlockHelper.h"
+#import "ABRequestWrapper.h"
 
 @interface ABBlockHelper ()
 
-@property (nonatomic, assign, readwrite) dispatch_queue_t lockQueue;
+@property (nonatomic, retain, readwrite) NSOperationQueue *backgroundQueue;
 
 @end
 
@@ -19,63 +20,61 @@
 #pragma mark -
 #pragma mark main routine
 
-@synthesize completeBlock, failBlock, parsingBlock;
-
-@synthesize lockQueue;
-
-- (id)init
-{
-    self = [super init];
-    if (self)
-    {
-        NSString *name = [NSString stringWithFormat:@"lock queue %d", self.hash];
-        lockQueue = dispatch_queue_create([name UTF8String], NULL);
-    }
-    return self;
-}
-
 - (void)dealloc
 {
-    self.completeBlock = nil;
-    self.failBlock = nil;
+    self.completedBlock = nil;
+    self.failedBlock = nil;
     self.parsingBlock = nil;
-    dispatch_release(lockQueue);
+    self.backgroundQueue = nil;
     [super dealloc];
 }
 
 #pragma mark -
 #pragma mark actions
 
-- (void)runCompleteBlockWithData:(id)data response:(NSHTTPURLResponse *)response
+- (void)runCompletedBlockWithWrapper:(ABRequestWrapper *)wrapper result:(id)result
 {
-    if (self.completeBlock)
+    if (self.completedBlock)
     {
-        self.completeBlock(data, response);
+        self.completedBlock(wrapper, result);
     }
 }
 
-- (void)runFailBlockWithError:(NSError *)error unreachable:(BOOL)isUnreachable
+- (void)runFailedBlockWithWrapper:(ABRequestWrapper *)wrapper unreachable:(BOOL)isUnreachable
 {
-    if (self.failBlock)
+    if (self.failedBlock)
     {
-        self.failBlock(error, isUnreachable);
+        self.failedBlock(wrapper, isUnreachable);
     }
 }
 
-- (void)runParsingBlockWithData:(NSData *)data
-                completionBlock:(ABParsingCompleteBlock)completionBlock
+- (void)runParsingBlockWithWrapper:(ABRequestWrapper *)wrapper
+                     callbackBlock:(ABParsingCompleteBlock)callbackBlock
 {
     if (self.parsingBlock)
     {
-        dispatch_async(self.lockQueue, ^
+        NSOperationQueue *callbackQueue = [NSOperationQueue mainQueue];
+        [self.backgroundQueue addOperationWithBlock:^
         {
-            id result = self.parsingBlock(data);
-            dispatch_async(dispatch_get_main_queue(), ^
+            id result = self.parsingBlock(wrapper);
+            [callbackQueue addOperationWithBlock:^
             {
-                completionBlock(result);
-            });
-        });
+                callbackBlock(result);
+            }];
+        }];
     }
+}
+
+#pragma mark -
+#pragma mark properties
+
+- (NSOperationQueue *)backgroundQueue
+{
+    if (!_backgroundQueue)
+    {
+        _backgroundQueue = [[NSOperationQueue alloc] init];
+    }
+    return _backgroundQueue;
 }
 
 @end
