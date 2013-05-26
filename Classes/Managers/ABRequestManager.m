@@ -14,10 +14,10 @@
 #import "NSMutableArray+Queue.h"
 
 @interface ABRequestManager ()
+
 - (void)runHeadRequest;
-- (void)parseData:(NSData *)data response:(NSHTTPURLResponse *)response
-       forWrapper:(ABRequestWrapper *)wrapper;
 - (void)connectionRelease;
+
 @end
 
 @implementation ABRequestManager
@@ -107,11 +107,11 @@
     [wrapper setReceivedError:error];
 }
 
-- (void)connectionDidReceiveData:(NSData *)receivedData response:(NSHTTPURLResponse *)response
+- (void)connectionDidReceiveData:(NSData *)data response:(NSHTTPURLResponse *)response
 {
     [self connectionRelease];
-    ABRequestWrapper *request = [queue headPop];
-    [self parseData:receivedData response:response forWrapper:request];
+    ABRequestWrapper *wrapper = [queue headPop];
+    [wrapper setReceivedData:data response:response];
     [self runHeadRequest];
 }
 
@@ -151,12 +151,6 @@
             [wrapper setUnreachable];
         }
     }
-}
-
-- (void)parseData:(NSData *)data response:(NSHTTPURLResponse *)response
-       forWrapper:(ABRequestWrapper *)wrapper
-{
-    [wrapper setReceivedData:data response:response];
 }
 
 - (void)connectionRelease

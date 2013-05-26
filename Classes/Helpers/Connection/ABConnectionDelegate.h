@@ -11,6 +11,6 @@
 @protocol ABConnectionDelegate <NSObject>
 
 - (void)connectionDidFail:(NSError *)error;
-- (void)connectionDidReceiveData:(NSData *)receivedData response:(NSHTTPURLResponse *)response;
+- (void)connectionDidReceiveData:(NSData *)data response:(NSHTTPURLResponse *)response;
 
 @end
