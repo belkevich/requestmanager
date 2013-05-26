@@ -11,6 +11,15 @@
 #import "ABRequestWrapper.h"
 #import "ABRequestManager.h"
 
+@interface NSURLRequest ()
+
+- (ABRequestWrapper *)wrapperWithRequestDelegate:(NSObject <ABRequestDelegate> *)delegate;
+- (ABRequestWrapper *)wrapperWithCompletedBlock:(ABRequestCompletedBlock)completedBlock
+                                    failedBlock:(ABRequestFailedBlock)failedBlock;
+- (void)setParsingBlock:(ABRequestDataParsingBlock)block toWrapper:(ABRequestWrapper *)theWrapper;
+
+@end
+
 @implementation NSURLRequest (RequestManager)
 
 #pragma mark -

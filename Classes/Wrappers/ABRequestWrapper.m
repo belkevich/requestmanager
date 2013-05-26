@@ -121,7 +121,7 @@
     }
     else
     {
-        [self.blockHelper runFailedBlockWithWrapper:nil unreachable:YES];
+        [self.blockHelper runFailedBlockWithWrapper:self unreachable:YES];
     }
 }
 
@@ -130,12 +130,11 @@
 
 - (void)parseReceivedData
 {
-    __block ABRequestWrapper *weakSelf = self;
     id completionBlock = ^(id parsedResult)
     {
         if (parsedResult)
         {
-            [weakSelf returnReceivedResult:parsedResult];
+            [self returnReceivedResult:parsedResult];
         }
     };
     [self.blockHelper runParsingBlockWithWrapper:self callbackBlock:completionBlock];
