@@ -10,13 +10,16 @@
 #import "ABMultiton.h"
 #import "ABConnectionHelper.h"
 #import "ABRequestWrapper.h"
-#import "ABReachabilityHelper.h"
+#import "SCNetworkReachability.h"
 #import "NSMutableArray+Queue.h"
+
+NSString * const kABDefaultReachabilityHost = @"google.com";
 
 @interface ABRequestManager ()
 
 - (void)runHeadRequest;
-- (void)connectionRelease;
+- (void)runHeadRequestWithNetworkStatus:(SCNetworkStatus)status;
+- (void)runConnectionWithRequest:(NSURLRequest *)request;
 
 @end
 
@@ -30,15 +33,16 @@
     self = [super init];
     if (self)
     {
-        queue = [NSMutableArray new];
-        reachability = [[ABReachabilityHelper alloc] initWithReachabilityDelegate:self];
+        queue = [[NSMutableArray alloc] init];
+        reachability = [[SCNetworkReachability alloc] initWithHostName:kABDefaultReachabilityHost];
+        reachability.delegate = self;
     }
     return self;
 }
 
 - (void)dealloc
 {
-    [self connectionRelease];
+    [connection stop];
 }
 
 #pragma mark -
@@ -52,7 +56,7 @@
 #pragma mark -
 #pragma mark actions
 
-- (void)sendRequestWrapper:(ABRequestWrapper *)wrapper
+- (void)addRequestWrapper:(ABRequestWrapper *)wrapper
 {
     [queue addObject:wrapper];
     if (queue.count == 1)
@@ -66,10 +70,9 @@
     NSInteger index = [queue indexOfObject:wrapper];
     if (index != NSNotFound)
     {
-        [queue removeObject:wrapper];
+        [queue removeObjectAtIndex:index];
         if (index == 0)
         {
-            [self connectionRelease];
             [self runHeadRequest];
         }
     }
@@ -77,8 +80,9 @@
 
 - (void)removeAllRequestWrappers
 {
+    [connection stop];
+    connection = nil;
     [queue removeAllObjects];
-    [self connectionRelease];
 }
 
 - (void)removeRequest:(NSURLRequest *)request
@@ -92,7 +96,6 @@
     [queue removeObjectsAtIndexes:indexSet];
     if ([indexSet containsIndex:0])
     {
-        [self connectionRelease];
         [self runHeadRequest];
     }
 }
@@ -102,34 +105,25 @@
 
 - (void)connectionDidFail:(NSError *)error
 {
-    [self connectionRelease];
+    [connection stop];
     ABRequestWrapper *wrapper = [queue headPop];
     [wrapper setReceivedError:error];
 }
 
 - (void)connectionDidReceiveData:(NSData *)data response:(NSHTTPURLResponse *)response
 {
-    [self connectionRelease];
+    [connection stop];
     ABRequestWrapper *wrapper = [queue headPop];
     [wrapper setReceivedData:data response:response];
     [self runHeadRequest];
 }
 
 #pragma mark -
-#pragma mark reachability delegate implementation
+#pragma mark network reachability delegate implementation
 
-- (void)reachabilityDidChange:(BOOL)reachable
+- (void)reachabilityDidChange:(SCNetworkStatus)status
 {
-    if (reachable)
-    {
-        [self runHeadRequest];
-    }
-    else
-    {
-        [self connectionRelease];
-        ABRequestWrapper *wrapper = [queue headPop];
-        [wrapper setUnreachable];
-    }
+    [self runHeadRequestWithNetworkStatus:status];
 }
 
 #pragma mark -
@@ -137,26 +131,39 @@
 
 - (void)runHeadRequest
 {
-    ABRequestWrapper *wrapper = [queue head];
-    if (wrapper)
+    [self runHeadRequestWithNetworkStatus:reachability.status];
+}
+
+- (void)runHeadRequestWithNetworkStatus:(SCNetworkStatus)status
+{
+    ABRequestWrapper *wrapper = nil;
+    if (queue.count > 0)
     {
-        if (reachability.isReachable)
+        [connection stop];
+        switch (status)
         {
-            [self connectionRelease];
-            connection = [[ABConnectionHelper alloc] initWithRequest:wrapper.request delegate:self];
-            [connection start];
-        }
-        else
-        {
-            [wrapper setUnreachable];
+            case SCNetworkStatusReachableViaCellular:
+            case SCNetworkStatusReachableViaWiFi:
+                wrapper = [queue head];
+                [self runConnectionWithRequest:wrapper.request];
+                break;
+
+            case SCNetworkStatusNotReachable:
+                connection = nil;
+                wrapper = [queue headPop];
+                [wrapper setUnreachable];
+                break;
+
+            default:
+                break;
         }
     }
 }
 
-- (void)connectionRelease
+- (void)runConnectionWithRequest:(NSURLRequest *)request
 {
-    [connection stop];
-    connection = nil;
+    connection = [[ABConnectionHelper alloc] initWithRequest:request delegate:self];
+    [connection start];    
 }
 
 @end

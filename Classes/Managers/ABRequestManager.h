@@ -9,22 +9,22 @@
 #import <Foundation/Foundation.h>
 #import "ABMultitonProtocol.h"
 #import "ABConnectionDelegate.h"
-#import "ABReachabilityDelegate.h"
+#import "SCNetworkReachabilityDelegate.h"
 
 @class ABConnectionHelper;
 @class ABRequestWrapper;
-@class ABReachabilityHelper;
+@class SCNetworkReachability;
 
 @interface ABRequestManager : NSObject
-<ABMultitonProtocol, ABConnectionDelegate, ABReachabilityDelegate>
+<ABMultitonProtocol, ABConnectionDelegate, SCNetworkReachabilityDelegate>
 {
     NSMutableArray *queue;
     ABConnectionHelper *connection;
-    ABReachabilityHelper *reachability;
+    SCNetworkReachability *reachability;
 }
 
 // actions
-- (void)sendRequestWrapper:(ABRequestWrapper *)wrapper;
+- (void)addRequestWrapper:(ABRequestWrapper *)wrapper;
 - (void)removeRequestWrapper:(ABRequestWrapper *)wrapper;
 - (void)removeAllRequestWrappers;
 - (void)removeRequest:(NSURLRequest *)request;

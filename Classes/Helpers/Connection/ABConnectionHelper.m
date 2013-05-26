@@ -55,7 +55,7 @@
 
 - (void)connection:(NSURLConnection *)aConnection didReceiveResponse:(NSURLResponse *)aResponse
 {
-    receivedData = [NSMutableData new];
+    receivedData = [[NSMutableData alloc] init];
     receivedResponse = (NSHTTPURLResponse *)aResponse;
     NSLog(@"%s Received response:\n%@", __func__, [[receivedResponse allHeaderFields] description]);
 }

@@ -28,7 +28,7 @@
 - (void)startWithDelegate:(NSObject <ABRequestDelegate> *)delegate
 {
     ABRequestWrapper *wrapper = [self wrapperWithRequestDelegate:delegate];
-    [[ABRequestManager sharedInstance] sendRequestWrapper:wrapper];
+    [[ABRequestManager sharedInstance] addRequestWrapper:wrapper];
 }
 
 - (void)startWithDelegate:(NSObject <ABRequestDelegate> *)delegate
@@ -36,7 +36,7 @@
 {
     ABRequestWrapper *wrapper = [self wrapperWithRequestDelegate:delegate];
     [self setParsingBlock:parsingBlock toWrapper:wrapper];
-    [[ABRequestManager sharedInstance] sendRequestWrapper:wrapper];
+    [[ABRequestManager sharedInstance] addRequestWrapper:wrapper];
 }
 
 - (void)startWithCompletedBlock:(ABRequestCompletedBlock)completedBlock
@@ -44,7 +44,7 @@
 {
     ABRequestWrapper *wrapper = [self wrapperWithCompletedBlock:completedBlock
                                                     failedBlock:failedBlock];
-    [[ABRequestManager sharedInstance] sendRequestWrapper:wrapper];
+    [[ABRequestManager sharedInstance] addRequestWrapper:wrapper];
 }
 
 - (void)startWithCompletedBlock:(ABRequestCompletedBlock)completedBlock
@@ -54,7 +54,7 @@
     ABRequestWrapper *wrapper = [self wrapperWithCompletedBlock:completedBlock
                                                     failedBlock:failedBlock];
     [self setParsingBlock:parsingBlock toWrapper:wrapper];
-    [[ABRequestManager sharedInstance] sendRequestWrapper:wrapper];
+    [[ABRequestManager sharedInstance] addRequestWrapper:wrapper];
 }
 
 - (void)cancelRequest
