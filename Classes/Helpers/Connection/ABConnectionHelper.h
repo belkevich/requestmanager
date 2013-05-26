@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "ABConnectionDelegate.h"
 
-@interface ABConnectionHelper : NSObject
+@interface ABConnectionHelper : NSObject <NSURLConnectionDelegate>
 {
     NSObject <ABConnectionDelegate> *delegate;
     NSURLRequest *request;

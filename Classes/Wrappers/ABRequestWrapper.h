@@ -15,10 +15,10 @@
     NSObject <ABWrapperDelegate> *delegate;
 }
 
-@property (nonatomic, retain, readonly) NSURLRequest *request;
-@property (nonatomic, retain, readonly) NSHTTPURLResponse *response;
-@property (nonatomic, retain, readonly) NSData *data;
-@property (nonatomic, retain, readonly) NSError *error;
+@property (nonatomic, strong, readonly) NSURLRequest *request;
+@property (nonatomic, strong, readonly) NSHTTPURLResponse *response;
+@property (nonatomic, strong, readonly) NSData *data;
+@property (nonatomic, strong, readonly) NSError *error;
 
 // initialization
 - (id)initWithURLRequest:(NSURLRequest *)request;

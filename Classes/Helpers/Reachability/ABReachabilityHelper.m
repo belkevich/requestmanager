@@ -12,7 +12,7 @@
 #define AB_DEFAULT_REACHABILITY             @"google.com"
 
 @interface ABReachabilityHelper ()
-@property (nonatomic, readonly) SCNetworkReachability *reachability;
+@property (nonatomic, strong, readonly) SCNetworkReachability *reachability;
 @end
 
 
@@ -31,11 +31,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [reachability release];
-    [super dealloc];
-}
 
 #pragma mark -
 #pragma mark public properties
@@ -51,7 +46,7 @@
 #pragma mark -
 #pragma mark network reachability delegate implementation
 
-- (void)reachabilityDidChange:(SCNetworkReachability *)aReachability
+- (void)reachabilityDidChange:(SCNetworkStatus)status
 {
     [delegate reachabilityDidChange:self.isReachable];
 }

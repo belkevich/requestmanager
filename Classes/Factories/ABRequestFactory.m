@@ -13,7 +13,7 @@
 
 + (id)requestFactory
 {
-    return [[[self alloc] init] autorelease];
+    return [[self alloc] init];
 }
 
 #pragma mark -
@@ -48,7 +48,7 @@
     {
         [request setHTTPBody:data];
     }
-    return [request autorelease];
+    return request;
 }
 
 @end

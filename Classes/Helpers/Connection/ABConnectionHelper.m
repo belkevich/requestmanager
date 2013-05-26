@@ -23,7 +23,7 @@
     self = [super init];
     if (self)
     {
-        request = [aRequest retain];
+        request = aRequest;
         delegate = aDelegate;
     }
     return self;
@@ -31,9 +31,7 @@
 
 - (void)dealloc
 {
-    [request release];
     [self connectionDataRelease];
-    [super dealloc];
 }
 
 #pragma mark -
@@ -57,11 +55,8 @@
 
 - (void)connection:(NSURLConnection *)aConnection didReceiveResponse:(NSURLResponse *)aResponse
 {
-	[receivedData release];
     receivedData = [NSMutableData new];
-    [receivedResponse release];
     receivedResponse = (NSHTTPURLResponse *)aResponse;
-    [receivedResponse retain];
     NSLog(@"%s Received response:\n%@", __func__, [[receivedResponse allHeaderFields] description]);
 }
 
@@ -75,9 +70,8 @@
     NSString *dataString = [[NSString alloc] initWithData:receivedData
                                                  encoding:NSUTF8StringEncoding];
     NSLog(@"%s Received:\n%@", __func__, dataString ? dataString : @"binary data");
-    [dataString release];
-    NSData *data = [[receivedData retain] autorelease];
-    NSHTTPURLResponse *response = [[receivedResponse retain] autorelease];
+    NSData *data = receivedData;
+    NSHTTPURLResponse *response = receivedResponse;
 	[self connectionDataRelease];
     [delegate connectionDidReceiveData:data response:response];
 }
@@ -96,11 +90,8 @@
 - (void)connectionDataRelease
 {
     [connection cancel];
-    [connection release];
     connection = nil;
-    [receivedResponse release];
     receivedResponse = nil;
-    [receivedData release];
     receivedData = nil;
 }
 

@@ -13,12 +13,12 @@
 @interface ABRequestWrapper ()
 
 // override property accessors
-@property (nonatomic, retain, readwrite) NSURLRequest *request;
-@property (nonatomic, retain, readwrite) NSHTTPURLResponse *response;
-@property (nonatomic, retain, readwrite) NSData *data;
-@property (nonatomic, retain, readwrite) NSError *error;
+@property (nonatomic, strong, readwrite) NSURLRequest *request;
+@property (nonatomic, strong, readwrite) NSHTTPURLResponse *response;
+@property (nonatomic, strong, readwrite) NSData *data;
+@property (nonatomic, strong, readwrite) NSError *error;
 // blocks
-@property (nonatomic, retain, readwrite) ABBlockHelper *blockHelper;
+@property (nonatomic, strong, readwrite) ABBlockHelper *blockHelper;
 
 - (void)parseReceivedData;
 - (void)returnReceivedResult:(id)result;
@@ -37,7 +37,7 @@
     if (self)
     {
         self.request = request;
-        self.blockHelper = [[[ABBlockHelper alloc] init] autorelease];
+        self.blockHelper = [[ABBlockHelper alloc] init];
     }
     return self;
 }
@@ -53,15 +53,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    self.request = nil;
-    self.response = nil;
-    self.data = nil;
-    self.error = nil;
-    self.blockHelper = nil;
-    [super dealloc];
-}
 
 #pragma mark -
 #pragma mark blocks

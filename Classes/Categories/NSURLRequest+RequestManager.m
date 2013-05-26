@@ -13,10 +13,10 @@
 
 @interface NSURLRequest ()
 
-- (ABRequestWrapper *)wrapperWithRequestDelegate:(NSObject <ABRequestDelegate> *)delegate;
-- (ABRequestWrapper *)wrapperWithCompletedBlock:(ABRequestCompletedBlock)completedBlock
-                                    failedBlock:(ABRequestFailedBlock)failedBlock;
-- (void)setParsingBlock:(ABRequestDataParsingBlock)block toWrapper:(ABRequestWrapper *)theWrapper;
+//- (ABRequestWrapper *)wrapperWithRequestDelegate:(NSObject <ABRequestDelegate> *)delegate;
+//- (ABRequestWrapper *)wrapperWithCompletedBlock:(ABRequestCompletedBlock)completedBlock
+//                                    failedBlock:(ABRequestFailedBlock)failedBlock;
+//- (void)setParsingBlock:(ABRequestDataParsingBlock)block toWrapper:(ABRequestWrapper *)theWrapper;
 
 @end
 
@@ -67,7 +67,7 @@
 
 - (ABRequestWrapper *)wrapperWithRequestDelegate:(NSObject <ABRequestDelegate> *)delegate
 {
-    __block NSObject <ABRequestDelegate> *weakDelegate = delegate;
+    __weak NSObject <ABRequestDelegate> *weakDelegate = delegate;
     ABRequestWrapper *theWrapper = [[ABRequestWrapper alloc] initWithURLRequest:self];
     [theWrapper setCompletedBlock:^(ABRequestWrapper *wrapper, id result)
     {
@@ -91,7 +91,7 @@
             [weakDelegate request:wrapper.request didReceiveError:wrapper.error];
         }
     }];
-    return [theWrapper autorelease];
+    return theWrapper;
 }
 
 - (ABRequestWrapper *)wrapperWithCompletedBlock:(ABRequestCompletedBlock)completedBlock
@@ -111,7 +111,7 @@
             failedBlock(wrapper.error, isUnreachable);
         }
     }];
-    return [theWrapper autorelease];
+    return theWrapper;
 }
 
 - (void)setParsingBlock:(ABRequestDataParsingBlock)block toWrapper:(ABRequestWrapper *)theWrapper

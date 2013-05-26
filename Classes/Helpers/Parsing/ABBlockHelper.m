@@ -11,7 +11,7 @@
 
 @interface ABBlockHelper ()
 
-@property (nonatomic, retain, readwrite) NSOperationQueue *backgroundQueue;
+@property (nonatomic, strong, readwrite) NSOperationQueue *backgroundQueue;
 
 @end
 
@@ -20,14 +20,6 @@
 #pragma mark -
 #pragma mark main routine
 
-- (void)dealloc
-{
-    self.completedBlock = nil;
-    self.failedBlock = nil;
-    self.parsingBlock = nil;
-    self.backgroundQueue = nil;
-    [super dealloc];
-}
 
 #pragma mark -
 #pragma mark actions

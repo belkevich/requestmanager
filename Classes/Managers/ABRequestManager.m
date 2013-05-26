@@ -39,9 +39,6 @@
 - (void)dealloc
 {
     [self connectionRelease];
-    [queue release];
-    [reachability release];
-    [super dealloc];
 }
 
 #pragma mark -
@@ -165,7 +162,6 @@
 - (void)connectionRelease
 {
     [connection stop];
-    [connection release];
     connection = nil;
 }
 

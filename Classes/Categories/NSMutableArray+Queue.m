@@ -20,8 +20,6 @@
     NSObject *head = [self head];
     if (head)
     {
-        [head retain];
-        [head autorelease];
         [self removeObject:head];
     }
     return head;
