@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "ABWrapperBlocks.h"
 
-typedef void (^ABParsingCompleteBlock)(id result);
+typedef void (^ABParsingCompletedBlock)(id result);
 
 @interface ABBlockHelper : NSObject
 
@@ -21,6 +21,6 @@ typedef void (^ABParsingCompleteBlock)(id result);
 - (void)runCompletedBlockWithWrapper:(ABRequestWrapper *)wrapper result:(id)result;
 - (void)runFailedBlockWithWrapper:(ABRequestWrapper *)wrapper unreachable:(BOOL)isUnreachable;
 - (void)runParsingBlockWithWrapper:(ABRequestWrapper *)wrapper
-                     callbackBlock:(ABParsingCompleteBlock)callbackBlock;
+                     callbackBlock:(ABParsingCompletedBlock)callbackBlock;
 
 @end

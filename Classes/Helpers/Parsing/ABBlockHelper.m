@@ -13,6 +13,8 @@
 
 @property (nonatomic, strong, readwrite) NSOperationQueue *backgroundQueue;
 
+- (void)runParsingCompletedBlock:(void(^)())block;
+
 @end
 
 @implementation ABBlockHelper
@@ -41,18 +43,20 @@
 }
 
 - (void)runParsingBlockWithWrapper:(ABRequestWrapper *)wrapper
-                     callbackBlock:(ABParsingCompleteBlock)callbackBlock
+                     callbackBlock:(ABParsingCompletedBlock)callbackBlock
 {
     if (self.parsingBlock)
     {
-        NSOperationQueue *callbackQueue = [NSOperationQueue mainQueue];
+        NSThread *callbackThread = [NSThread currentThread];
         [self.backgroundQueue addOperationWithBlock:^
         {
             id result = self.parsingBlock(wrapper);
-            [callbackQueue addOperationWithBlock:^
+            id block = ^
             {
                 callbackBlock(result);
-            }];
+            };
+            [self performSelector:@selector(runParsingCompletedBlock:) onThread:callbackThread
+                       withObject:block waitUntilDone:NO];
         }];
     }
 }
@@ -65,8 +69,17 @@
     if (!_backgroundQueue)
     {
         _backgroundQueue = [[NSOperationQueue alloc] init];
+        _backgroundQueue.maxConcurrentOperationCount = 1;
     }
     return _backgroundQueue;
+}
+
+#pragma mark -
+#pragma mark private
+
+- (void)runParsingCompletedBlock:(void(^)())block
+{
+    block();
 }
 
 @end
