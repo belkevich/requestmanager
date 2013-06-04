@@ -9,12 +9,6 @@
 
 #import "NSThread+Block.h"
 
-@interface NSThread ()
-
-+ (void)performBlock:(void(^)())block;
-
-@end
-
 @implementation NSThread (Block)
 
 #pragma mark -

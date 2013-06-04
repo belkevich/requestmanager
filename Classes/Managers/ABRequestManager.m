@@ -8,10 +8,11 @@
 
 #import "ABRequestManager.h"
 #import "ABMultiton.h"
-#import "ABAsyncQueue.h"
 #import "ABConnectionHelper.h"
 #import "ABRequestWrapper.h"
 #import "SCNetworkReachability.h"
+#import "NSMutableArray+Queue.h"
+#import "NSMutableArray+Request.h"
 
 NSString * const kABDefaultReachabilityHost = @"google.com";
 
@@ -33,7 +34,7 @@ NSString * const kABDefaultReachabilityHost = @"google.com";
     self = [super init];
     if (self)
     {
-        queue = [[ABAsyncQueue alloc] init];
+        queue = [[NSMutableArray alloc] init];
         reachability = [[SCNetworkReachability alloc] initWithHostName:kABDefaultReachabilityHost];
         reachability.delegate = self;
     }
@@ -58,24 +59,21 @@ NSString * const kABDefaultReachabilityHost = @"google.com";
 
 - (void)addRequestWrapper:(ABRequestWrapper *)wrapper
 {
-    [queue putObject:wrapper async:^(NSUInteger count)
+    [queue addObject:wrapper];
+    if (queue.count == 1)
     {
-        if (count == 1)
-        {
-            [self runHeadRequest];
-        }
-    }];
+        [self runHeadRequest];
+    }
 }
 
 - (void)removeRequestWrapper:(ABRequestWrapper *)wrapper
 {
-    [queue removeObject:wrapper async:^(NSUInteger index)
+    BOOL isFirst = NO;
+    [queue removeWrapper:wrapper isFirst:&isFirst];
+    if (isFirst)
     {
-        if (index == 0)
-        {
-            [self runHeadRequest];
-        }
-    }];
+        [self runHeadRequest];
+    }
 }
 
 - (void)removeAllRequestWrappers
@@ -87,14 +85,9 @@ NSString * const kABDefaultReachabilityHost = @"google.com";
 
 - (void)removeRequest:(NSURLRequest *)request
 {
-    NSIndexSet *indexSet = [queue indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger idx,
-                                                                    BOOL *stop)
-    {
-        ABRequestWrapper *wrapper = obj;
-        return (wrapper.request == request);
-    }];
-    [queue removeObjectsAtIndexes:indexSet];
-    if ([indexSet containsIndex:0])
+    BOOL isFirst = NO;
+    [queue removeRequest:request isFirst:&isFirst];
+    if (isFirst)
     {
         [self runHeadRequest];
     }

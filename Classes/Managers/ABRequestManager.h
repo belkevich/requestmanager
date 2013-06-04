@@ -11,7 +11,6 @@
 #import "ABConnectionDelegate.h"
 #import "SCNetworkReachabilityDelegate.h"
 
-@class ABAsyncQueue;
 @class ABConnectionHelper;
 @class ABRequestWrapper;
 @class SCNetworkReachability;
@@ -19,7 +18,7 @@
 @interface ABRequestManager : NSObject
 <ABMultitonProtocol, ABConnectionDelegate, SCNetworkReachabilityDelegate>
 {
-    ABAsyncQueue *queue;
+    NSMutableArray *queue;
     ABConnectionHelper *connection;
     SCNetworkReachability *reachability;
 }
