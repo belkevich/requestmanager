@@ -66,6 +66,11 @@ NSString * const kABDefaultReachabilityHost = @"google.com";
     }
 }
 
+- (void)addRequestWrapperFirst:(ABRequestWrapper *)wrapper
+{
+    queue.count > 1 ? [queue insertObject:wrapper atIndex:1] : [self addRequestWrapper:wrapper];
+}
+
 - (void)removeRequestWrapper:(ABRequestWrapper *)wrapper
 {
     BOOL isFirst = NO;

@@ -25,6 +25,7 @@
 
 // actions
 - (void)addRequestWrapper:(ABRequestWrapper *)wrapper;
+- (void)addRequestWrapperFirst:(ABRequestWrapper *)wrapper;
 - (void)removeRequestWrapper:(ABRequestWrapper *)wrapper;
 - (void)removeAllRequestWrappers;
 - (void)removeRequest:(NSURLRequest *)request;
