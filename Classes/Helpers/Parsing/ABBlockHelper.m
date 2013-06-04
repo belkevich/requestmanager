@@ -8,20 +8,33 @@
 
 #import "ABBlockHelper.h"
 #import "ABRequestWrapper.h"
-
-@interface ABBlockHelper ()
-
-@property (nonatomic, strong, readwrite) NSOperationQueue *backgroundQueue;
-
-- (void)runParsingCompletedBlock:(void(^)())block;
-
-@end
+#import "NSThread+Block.h"
 
 @implementation ABBlockHelper
 
 #pragma mark -
 #pragma mark main routine
 
+- (id)init
+{
+    self = [super init];
+    if (self)
+    {
+        NSString *name = [NSString stringWithFormat:@"%d.org.okolodev.parsing", self.hash];
+        queue = dispatch_queue_create([name cStringUsingEncoding:NSASCIIStringEncoding], NULL);
+    }
+    return self;
+}
+
+- (void)dealloc
+{
+#if !OS_OBJECT_USE_OBJC
+    if (queue)
+    {
+        dispatch_release(queue);
+    }
+#endif
+}
 
 #pragma mark -
 #pragma mark actions
@@ -47,39 +60,14 @@
 {
     if (self.parsingBlock)
     {
-        NSThread *callbackThread = [NSThread currentThread];
-        [self.backgroundQueue addOperationWithBlock:^
+        __weak NSThread *callbackThread = [NSThread currentThread];
+        dispatch_async(queue, ^
         {
             id result = self.parsingBlock(wrapper);
-            id block = ^
-            {
-                callbackBlock(result);
-            };
-            [self performSelector:@selector(runParsingCompletedBlock:) onThread:callbackThread
-                       withObject:block waitUntilDone:NO];
-        }];
+            id block = ^{callbackBlock(result);};
+            [NSThread performBlock:block onThread:callbackThread];
+        });
     }
-}
-
-#pragma mark -
-#pragma mark properties
-
-- (NSOperationQueue *)backgroundQueue
-{
-    if (!_backgroundQueue)
-    {
-        _backgroundQueue = [[NSOperationQueue alloc] init];
-        _backgroundQueue.maxConcurrentOperationCount = 1;
-    }
-    return _backgroundQueue;
-}
-
-#pragma mark -
-#pragma mark private
-
-- (void)runParsingCompletedBlock:(void(^)())block
-{
-    block();
 }
 
 @end

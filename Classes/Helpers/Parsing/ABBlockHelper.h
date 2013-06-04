@@ -12,6 +12,9 @@
 typedef void (^ABParsingCompletedBlock)(id result);
 
 @interface ABBlockHelper : NSObject
+{
+    dispatch_queue_t queue;
+}
 
 @property (nonatomic, copy, readwrite) ABWrapperCompletedBlock completedBlock;
 @property (nonatomic, copy, readwrite) ABWrapperFailedBlock failedBlock;

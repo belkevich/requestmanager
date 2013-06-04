@@ -1,5 +1,5 @@
 //
-//  ABRequestManager
+//  ABRequestManager.m
 //  Request Manager
 //
 //  Created by Alexey Belkevich on 12/30/12.
@@ -8,10 +8,10 @@
 
 #import "ABRequestManager.h"
 #import "ABMultiton.h"
+#import "ABAsyncQueue.h"
 #import "ABConnectionHelper.h"
 #import "ABRequestWrapper.h"
 #import "SCNetworkReachability.h"
-#import "NSMutableArray+Queue.h"
 
 NSString * const kABDefaultReachabilityHost = @"google.com";
 
@@ -33,7 +33,7 @@ NSString * const kABDefaultReachabilityHost = @"google.com";
     self = [super init];
     if (self)
     {
-        queue = [[NSMutableArray alloc] init];
+        queue = [[ABAsyncQueue alloc] init];
         reachability = [[SCNetworkReachability alloc] initWithHostName:kABDefaultReachabilityHost];
         reachability.delegate = self;
     }
@@ -58,24 +58,24 @@ NSString * const kABDefaultReachabilityHost = @"google.com";
 
 - (void)addRequestWrapper:(ABRequestWrapper *)wrapper
 {
-    [queue addObject:wrapper];
-    if (queue.count == 1)
+    [queue putObject:wrapper async:^(NSUInteger count)
     {
-        [self runHeadRequest];
-    }
+        if (count == 1)
+        {
+            [self runHeadRequest];
+        }
+    }];
 }
 
 - (void)removeRequestWrapper:(ABRequestWrapper *)wrapper
 {
-    NSInteger index = [queue indexOfObject:wrapper];
-    if (index != NSNotFound)
+    [queue removeObject:wrapper async:^(NSUInteger index)
     {
-        [queue removeObjectAtIndex:index];
         if (index == 0)
         {
             [self runHeadRequest];
         }
-    }
+    }];
 }
 
 - (void)removeAllRequestWrappers

@@ -1,5 +1,5 @@
 //
-//  ABRequestManager
+//  ABRequestManager.h
 //  Request Manager
 //
 //  Created by Alexey Belkevich on 12/30/12.
@@ -11,6 +11,7 @@
 #import "ABConnectionDelegate.h"
 #import "SCNetworkReachabilityDelegate.h"
 
+@class ABAsyncQueue;
 @class ABConnectionHelper;
 @class ABRequestWrapper;
 @class SCNetworkReachability;
@@ -18,7 +19,7 @@
 @interface ABRequestManager : NSObject
 <ABMultitonProtocol, ABConnectionDelegate, SCNetworkReachabilityDelegate>
 {
-    NSMutableArray *queue;
+    ABAsyncQueue *queue;
     ABConnectionHelper *connection;
     SCNetworkReachability *reachability;
 }
