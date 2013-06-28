@@ -7,6 +7,8 @@
 //
 
 #import "ABRequestFactory.h"
+#import "ABMultiton.h"
+#import "ABRequestOptions.h"
 
 
 @implementation ABRequestFactory
@@ -17,38 +19,86 @@
 }
 
 #pragma mark -
+#pragma mark multiton protocol implementation
+
++ (instancetype)sharedInstance
+{
+    return [ABMultiton sharedInstanceOfClass:[self class]];
+}
+
+#pragma mark -
 #pragma mark actions
 
-- (NSMutableURLRequest *)createGETRequest:(NSURL *)requestURL
+- (NSMutableURLRequest *)createGETRequest:(NSString *)path
 {
-    return [self createRequest:requestURL method:@"GET" data:nil];
+    return [self createRequest:path method:@"GET" data:nil];
 }
 
-- (NSMutableURLRequest *)createPOSTRequest:(NSURL *)requestURL data:(NSData *)data
+- (NSMutableURLRequest *)createPOSTRequest:(NSString *)path body:(NSData *)body
 {
-    return [self createRequest:requestURL method:@"POST" data:data];
+    return [self createRequest:path method:@"POST" data:body];
 }
 
-- (NSMutableURLRequest *)createPUTRequest:(NSURL *)requestURL data:(NSData *)data
+- (NSMutableURLRequest *)createPUTRequest:(NSString *)path body:(NSData *)body
 {
-    return [self createRequest:requestURL method:@"PUT" data:data];
+    return [self createRequest:path method:@"PUT" data:body];
 }
 
-- (NSMutableURLRequest *)createDELETERequest:(NSURL *)requestURL
+- (NSMutableURLRequest *)createDELETERequest:(NSString *)path
 {
-    return [self createRequest:requestURL method:@"DELETE" data:nil];
+    return [self createRequest:path method:@"DELETE" data:nil];
 }
 
-- (NSMutableURLRequest *)createRequest:(NSURL *)requestURL method:(NSString *)method
+- (NSMutableURLRequest *)createRequest:(NSString *)path method:(NSString *)method
                                   data:(NSData *)data
 {
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:requestURL];
+    NSURL *pathURL = [self requestURLWithPath:path];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:pathURL];
     [request setHTTPMethod:method];
     if (data)
     {
         [request setHTTPBody:data];
     }
+    [self applyOptionsToRequest:request];
     return request;
+}
+
+#pragma mark -
+#pragma mark private
+
+- (NSURL *)requestURLWithPath:(NSString *)path
+{
+    path = [self requestFullPathWithPath:path];
+    NSURL *url = [NSURL URLWithString:path];
+    if (!url)
+    {
+        NSString *reason = [NSString stringWithFormat:@"Can't create URL with path\n%@", path];
+        @throw [NSException exceptionWithName:@"Invalid URL" reason:reason userInfo:nil];
+    }
+    return url;
+}
+
+- (NSString *)requestFullPathWithPath:(NSString *)path
+{
+    if (self.options.basePath)
+    {
+        path = [self.options.basePath stringByAppendingString:path];
+    }
+    return [path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+}
+
+- (void)applyOptionsToRequest:(NSMutableURLRequest *)request
+{
+    if (self.options)
+    {
+        [request setHTTPShouldHandleCookies:self.options.cookies];
+        request.timeoutInterval = self.options.timeout;
+        request.cachePolicy = self.options.cache;
+        if (self.options.headers)
+        {
+            [request setAllHTTPHeaderFields:self.options.headers];
+        }
+    }
 }
 
 @end

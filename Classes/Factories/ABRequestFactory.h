@@ -7,18 +7,22 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "ABMultitonProtocol.h"
 
+@class ABRequestOptions;
 
-@interface ABRequestFactory : NSObject
+@interface ABRequestFactory : NSObject <ABMultitonProtocol>
+
+@property (nonatomic, retain) ABRequestOptions *options;
 
 // initialization
 + (id)requestFactory;
 // actions
-- (NSMutableURLRequest *)createGETRequest:(NSURL *)requestURL;
-- (NSMutableURLRequest *)createPOSTRequest:(NSURL *)requestURL data:(NSData *)data;
-- (NSMutableURLRequest *)createPUTRequest:(NSURL *)requestURL data:(NSData *)data;
-- (NSMutableURLRequest *)createDELETERequest:(NSURL *)requestURL;
-- (NSMutableURLRequest *)createRequest:(NSURL *)requestURL method:(NSString *)method
+- (NSMutableURLRequest *)createGETRequest:(NSString *)path;
+- (NSMutableURLRequest *)createPOSTRequest:(NSString *)path body:(NSData *)body;
+- (NSMutableURLRequest *)createPUTRequest:(NSString *)path body:(NSData *)body;
+- (NSMutableURLRequest *)createDELETERequest:(NSString *)path;
+- (NSMutableURLRequest *)createRequest:(NSString *)path method:(NSString *)method
                                   data:(NSData *)data;
 
 @end
