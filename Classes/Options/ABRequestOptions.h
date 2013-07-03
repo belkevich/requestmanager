@@ -10,10 +10,10 @@
 
 @interface ABRequestOptions : NSObject
 
-@property (nonatomic, retain) NSString *basePath;
+@property (nonatomic, strong) NSString *basePath;
 @property (nonatomic, assign) BOOL cookies;
 @property (nonatomic, assign) NSTimeInterval timeout;
 @property (nonatomic, assign) NSURLRequestCachePolicy cache;
-@property (nonatomic, retain) NSDictionary *headers;
+@property (nonatomic, strong) NSDictionary *headers;
 
 @end

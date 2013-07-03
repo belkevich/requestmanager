@@ -13,7 +13,7 @@
 
 @interface ABRequestFactory : NSObject <ABMultitonProtocol>
 
-@property (nonatomic, retain) ABRequestOptions *options;
+@property (nonatomic, strong) ABRequestOptions *options;
 
 // initialization
 + (id)requestFactory;

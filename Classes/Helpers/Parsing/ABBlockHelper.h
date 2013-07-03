@@ -16,9 +16,9 @@ typedef void (^ABParsingCompletedBlock)(id result);
     dispatch_queue_t queue;
 }
 
-@property (nonatomic, copy, readwrite) ABWrapperCompletedBlock completedBlock;
-@property (nonatomic, copy, readwrite) ABWrapperFailedBlock failedBlock;
-@property (nonatomic, copy, readwrite) ABWrapperDataParsingBlock parsingBlock;
+@property (nonatomic, copy) ABWrapperCompletedBlock completedBlock;
+@property (nonatomic, copy) ABWrapperFailedBlock failedBlock;
+@property (nonatomic, copy) ABWrapperDataParsingBlock parsingBlock;
 
 // actions
 - (void)runCompletedBlockWithWrapper:(ABRequestWrapper *)wrapper result:(id)result;
