@@ -3,7 +3,7 @@
 //  Request Manager
 //
 //  Created by Alexey Belkevich on 5/30/13.
-//  Copyright (c) 2013 okolodev. All rights reserved.
+//  Copyright (c) 2013 Okolodev. All rights reserved.
 //
 
 

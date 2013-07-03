@@ -1,5 +1,5 @@
 //
-//  RequestWrapper.h
+//  ABRequestWrapper.h
 //  Request Manager
 //
 //  Created by Alexey Belkevich on 12/31/12.

@@ -1,5 +1,5 @@
 //
-//  ABConnectionHelper
+//  ABConnectionHelper.h
 //  Request Manager
 //
 //  Created by Alexey Belkevich on 12/30/12.

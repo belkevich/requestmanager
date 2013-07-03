@@ -1,5 +1,5 @@
 //
-//  RequestWrapper.m
+//  ABRequestWrapper.m
 //  Request Manager
 //
 //  Created by Alexey Belkevich on 12/31/12.
@@ -12,13 +12,12 @@
 
 @interface ABRequestWrapper ()
 
-// override property accessors
 @property (nonatomic, strong, readwrite) NSURLRequest *request;
 @property (nonatomic, strong, readwrite) NSHTTPURLResponse *response;
 @property (nonatomic, strong, readwrite) NSData *data;
 @property (nonatomic, strong, readwrite) NSError *error;
-// blocks
-@property (nonatomic, strong, readwrite) ABBlockHelper *blockHelper;
+
+@property (nonatomic, strong) ABBlockHelper *blockHelper;
 
 @end
 
