@@ -16,14 +16,6 @@
 
 NSString * const kABDefaultReachabilityHost = @"google.com";
 
-@interface ABRequestManager ()
-
-- (void)runHeadRequest;
-- (void)runHeadRequestWithNetworkStatus:(SCNetworkStatus)status;
-- (void)runConnectionWithRequest:(NSURLRequest *)request;
-
-@end
-
 @implementation ABRequestManager
 
 #pragma mark -

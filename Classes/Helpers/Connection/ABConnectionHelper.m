@@ -8,9 +8,6 @@
 
 #import "ABConnectionHelper.h"
 
-@interface ABConnectionHelper ()
-- (void)connectionDataRelease;
-@end
 
 @implementation ABConnectionHelper
 

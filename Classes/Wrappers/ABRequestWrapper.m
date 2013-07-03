@@ -20,9 +20,6 @@
 // blocks
 @property (nonatomic, strong, readwrite) ABBlockHelper *blockHelper;
 
-- (void)parseReceivedData;
-- (void)returnReceivedResult:(id)result;
-
 @end
 
 @implementation ABRequestWrapper
