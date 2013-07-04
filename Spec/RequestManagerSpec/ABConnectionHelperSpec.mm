@@ -7,7 +7,7 @@
 //
 
 #import "CedarAsync.h"
-#import "Nocilla.h"
+#import "OHHTTPStubs.h"
 #import "ABConnectionHelper+Spec.h"
 
 using namespace Cedar::Matchers;
@@ -34,9 +34,14 @@ describe(@"Connection helper", ^
         responseData = [[NSData alloc] init];
         responseHeaders = [[NSDictionary alloc] initWithObjectsAndKeys:@"application/json",
                                                                        @"Content-Type", nil];
-        stubRequest(@"GET", url.absoluteString).andReturnRawResponse(responseData).
-        withHeaders(responseHeaders);
-        [[LSNocilla sharedInstance] start];
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request)
+        {
+            return YES;
+        }                   withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request)
+        {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:200
+                                            responseTime:0.01f headers:responseHeaders];
+        }];
     });
 
     afterEach(^
@@ -47,8 +52,7 @@ describe(@"Connection helper", ^
         [url release];
         [responseData release];
         [responseHeaders release];
-        [[LSNocilla sharedInstance] stop];
-        [[LSNocilla sharedInstance] clearStubs];
+        [OHHTTPStubs removeAllRequestHandlers];
         [delegateMock reset_sent_messages];
     });
 
