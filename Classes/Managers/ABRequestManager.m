@@ -16,6 +16,13 @@
 
 NSString * const kABDefaultReachabilityHost = @"google.com";
 
+@interface ABRequestManager () <SCNetworkReachabilityDelegate>
+
+@property (nonatomic, strong) SCNetworkReachability *reachability;
+
+@end
+
+
 @implementation ABRequestManager
 
 #pragma mark -
@@ -27,8 +34,7 @@ NSString * const kABDefaultReachabilityHost = @"google.com";
     if (self)
     {
         queue = [[NSMutableArray alloc] init];
-        reachability = [[SCNetworkReachability alloc] initWithHostName:kABDefaultReachabilityHost];
-        reachability.delegate = self;
+        [self setReachabilityCheckHost:kABDefaultReachabilityHost];
     }
     return self;
 }
@@ -90,6 +96,12 @@ NSString * const kABDefaultReachabilityHost = @"google.com";
     }
 }
 
+- (void)setReachabilityCheckHost:(NSString *)checkHost
+{
+    self.reachability = [[SCNetworkReachability alloc] initWithHostName:checkHost];
+    self.reachability.delegate = self;
+}
+
 #pragma mark -
 #pragma mark connection delegate method
 
@@ -121,7 +133,7 @@ NSString * const kABDefaultReachabilityHost = @"google.com";
 
 - (void)runHeadRequest
 {
-    [self runHeadRequestWithNetworkStatus:reachability.status];
+    [self runHeadRequestWithNetworkStatus:self.reachability.status];
 }
 
 - (void)runHeadRequestWithNetworkStatus:(SCNetworkStatus)status

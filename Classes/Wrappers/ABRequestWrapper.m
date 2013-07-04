@@ -21,8 +21,8 @@
 
 @end
 
-@implementation ABRequestWrapper
 
+@implementation ABRequestWrapper
 
 #pragma mark -
 #pragma mark main routine
