@@ -27,7 +27,7 @@ describe(@"Connection helper", ^
 
     beforeEach(^
     {
-        url = [[NSURL alloc] initWithString:@"http://test.com"];
+        url = [[NSURL alloc] initWithString:@"http://test.com/"];
         request = [[NSMutableURLRequest alloc] initWithURL:url];
         delegateMock = nice_fake_for(@protocol(ABConnectionDelegate));
         helper = [[ABConnectionHelper alloc] initWithRequest:request delegate:delegateMock];
@@ -47,8 +47,8 @@ describe(@"Connection helper", ^
         [url release];
         [responseData release];
         [responseHeaders release];
-        [[LSNocilla sharedInstance] clearStubs];
         [[LSNocilla sharedInstance] stop];
+        [[LSNocilla sharedInstance] clearStubs];
         [delegateMock reset_sent_messages];
     });
 
