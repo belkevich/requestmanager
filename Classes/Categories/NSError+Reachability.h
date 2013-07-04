@@ -12,5 +12,6 @@
 @interface NSError (Reachability)
 
 + (NSError *)errorReachability;
+- (BOOL)isReachabilityError;
 
 @end

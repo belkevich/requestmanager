@@ -11,5 +11,5 @@
 @class ABRequestWrapper;
 
 typedef void (^ABWrapperCompletedBlock)(ABRequestWrapper *wrapper, id result);
-typedef void (^ABWrapperFailedBlock)(ABRequestWrapper *wrapper, BOOL isUnreachable);
+typedef void (^ABWrapperFailedBlock)(ABRequestWrapper *wrapper);
 typedef id (^ABWrapperDataParsingBlock)(ABRequestWrapper *wrapper);

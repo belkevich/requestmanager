@@ -89,26 +89,19 @@
 {
     self.error = anError;
     delegate ? [delegate requestWrapper:self didFail:self.error] :
-    [self.blockHelper runFailedBlockWithWrapper:self unreachable:NO];
+    [self.blockHelper runFailedBlockWithWrapper:self];
 }
 
 - (void)setUnreachable
 {
-    if (delegate)
+    if ([delegate respondsToSelector:@selector(requestWrapperDidBecomeUnreachable:)])
     {
-        if ([delegate respondsToSelector:@selector(requestWrapperDidBecomeUnreachable:)])
-        {
-            [delegate requestWrapperDidBecomeUnreachable:self];
-        }
-        else
-        {
-            NSError *error = [NSError errorReachability];
-            [delegate requestWrapper:self didFail:error];
-        }
+        [delegate requestWrapperDidBecomeUnreachable:self];
     }
     else
     {
-        [self.blockHelper runFailedBlockWithWrapper:self unreachable:YES];
+        NSError *error = [NSError errorReachability];
+        [self setReceivedError:error];
     }
 }
 

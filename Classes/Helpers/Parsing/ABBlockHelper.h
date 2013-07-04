@@ -22,7 +22,7 @@ typedef void (^ABParsingCompletedBlock)(id result);
 
 // actions
 - (void)runCompletedBlockWithWrapper:(ABRequestWrapper *)wrapper result:(id)result;
-- (void)runFailedBlockWithWrapper:(ABRequestWrapper *)wrapper unreachable:(BOOL)isUnreachable;
+- (void)runFailedBlockWithWrapper:(ABRequestWrapper *)wrapper;
 - (void)runParsingBlockWithWrapper:(ABRequestWrapper *)wrapper
                      callbackBlock:(ABParsingCompletedBlock)callbackBlock;
 

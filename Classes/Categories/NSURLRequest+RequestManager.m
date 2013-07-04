@@ -64,19 +64,12 @@
     [theWrapper setCompletedBlock:^(ABRequestWrapper *wrapper, id result)
     {
         [weakDelegate request:wrapper.request didReceiveResponse:result];
-    }                 failedBlock:^(ABRequestWrapper *wrapper, BOOL isUnreachable)
+    }                 failedBlock:^(ABRequestWrapper *wrapper)
     {
-        if (isUnreachable)
+        if ([wrapper.error isReachabilityError] &&
+            [weakDelegate respondsToSelector:@selector(requestDidBecomeUnreachable:)])
         {
-            if ([weakDelegate respondsToSelector:@selector(requestDidBecomeUnreachable:)])
-            {
-                [weakDelegate requestDidBecomeUnreachable:wrapper.request];
-            }
-            else
-            {
-                NSError *error = [NSError errorReachability];
-                [weakDelegate request:wrapper.request didReceiveError:error];
-            }
+            [weakDelegate requestDidBecomeUnreachable:wrapper.request];
         }
         else
         {
@@ -96,11 +89,11 @@
         {
             completedBlock(wrapper.response, result);
         }
-    }                 failedBlock:^(ABRequestWrapper *wrapper, BOOL isUnreachable)
+    }                 failedBlock:^(ABRequestWrapper *wrapper)
     {
         if (failedBlock)
         {
-            failedBlock(wrapper.error, isUnreachable);
+            failedBlock(wrapper.error);
         }
     }];
     return theWrapper;

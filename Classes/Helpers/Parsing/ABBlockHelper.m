@@ -47,11 +47,11 @@
     }
 }
 
-- (void)runFailedBlockWithWrapper:(ABRequestWrapper *)wrapper unreachable:(BOOL)isUnreachable
+- (void)runFailedBlockWithWrapper:(ABRequestWrapper *)wrapper
 {
     if (self.failedBlock)
     {
-        self.failedBlock(wrapper, isUnreachable);
+        self.failedBlock(wrapper);
     }
 }
 

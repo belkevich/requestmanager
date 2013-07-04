@@ -10,7 +10,7 @@
 #import "ABRequestDelegate.h"
 
 typedef void (^ABRequestCompletedBlock)(NSHTTPURLResponse *response, id result);
-typedef void (^ABRequestFailedBlock)(NSError *error, BOOL isUnreachable);
+typedef void (^ABRequestFailedBlock)(NSError *error);
 typedef id (^ABRequestDataParsingBlock)(NSData *data);
 
 
