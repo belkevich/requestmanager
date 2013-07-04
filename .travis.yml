@@ -7,4 +7,4 @@ before_install:
         - cd Spec
         - pod 
 
-script: ios_ci cedar --source-root $TRAVIS_BUILD_DIR/Spec --workspace RequestManagerSpec.xcworkspace --scheme RequestManagerSpec --build-path Build/Products
+script: ios_ci cedar --source-root $TRAVIS_BUILD_DIR --workspace RequestManagerSpec.xcworkspace --scheme RequestManagerSpec --build-path Build/Products
