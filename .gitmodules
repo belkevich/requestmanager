@@ -1,6 +1,0 @@
-[submodule "Externals/ABMultiton"]
-	path = Externals/ABMultiton
-	url = git@github.com:belkevich/multiton.git
-[submodule "Externals/SCNetworkReachability"]
-	path = Externals/SCNetworkReachability
-	url = git@github.com:belkevich/reachability-ios.git
