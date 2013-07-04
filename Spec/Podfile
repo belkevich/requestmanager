@@ -1,0 +1,5 @@
+platform :ios, '5.0'
+  pod 'ABMultiton'
+  pod 'SCNetworkReachability'
+  pod 'CedarAsync'
+  pod 'Nocilla'
