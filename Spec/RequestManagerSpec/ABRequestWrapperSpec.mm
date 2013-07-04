@@ -8,7 +8,7 @@
 
 #import "CedarAsync.h"
 #import "ABRequestWrapper.h"
-//#import "OCFuntime.h"
+#import "OCFuntime.h"
 #import "NSError+Reachability.h"
 
 using namespace Cedar::Matchers;
@@ -90,17 +90,17 @@ describe(@"Delegate", ^
     {
         delegateMock stub_method(@selector(requestWrapper:didFail:));
         // workaround for optional delegate method remove when it will be fixed in Cedar
-//        OCFuntime *funtime = [[OCFuntime alloc] init];
-//        [funtime changeClass:[CDRProtocolFake class] instanceMethod:@selector(respondsToSelector:)
-//              implementation:^
-//              {
-//                  return NO;
-//              }];
+        OCFuntime *funtime = [[OCFuntime alloc] init];
+        [funtime changeClass:[CDRProtocolFake class] instanceMethod:@selector(respondsToSelector:)
+              implementation:^
+              {
+                  return NO;
+              }];
         // end
         [wrapper setUnreachable];
         // remove workaround
-//        [funtime revertClass:[CDRProtocolFake class]];
-//        [funtime release];
+        [funtime revertClass:[CDRProtocolFake class]];
+        [funtime release];
         // end
         delegateMock should have_received(@selector(requestWrapper:didFail:)).with(wrapper).
         and_with(Arguments::any([NSError class]));
