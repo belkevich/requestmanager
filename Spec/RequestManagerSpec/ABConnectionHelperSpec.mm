@@ -34,9 +34,9 @@ describe(@"Connection helper", ^
         responseData = [[NSData alloc] init];
         responseHeaders = [[NSDictionary alloc] initWithObjectsAndKeys:@"application/json",
                                                                        @"Content-Type", nil];
-        [[LSNocilla sharedInstance] start];
         stubRequest(@"GET", url.absoluteString).andReturnRawResponse(responseData).
         withHeaders(responseHeaders);
+        [[LSNocilla sharedInstance] start];
     });
 
     afterEach(^
