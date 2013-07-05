@@ -7,7 +7,6 @@
 //
 
 #import "NSURLRequest+RequestManager.h"
-#import "NSError+Reachability.h"
 #import "ABRequestWrapper.h"
 #import "ABRequestManager.h"
 
@@ -66,15 +65,7 @@
         [weakDelegate request:wrapper.request didReceiveResponse:result];
     }                 failedBlock:^(ABRequestWrapper *wrapper)
     {
-        if ([wrapper.error isReachabilityError] &&
-            [weakDelegate respondsToSelector:@selector(requestDidBecomeUnreachable:)])
-        {
-            [weakDelegate requestDidBecomeUnreachable:wrapper.request];
-        }
-        else
-        {
-            [weakDelegate request:wrapper.request didReceiveError:wrapper.error];
-        }
+        [weakDelegate request:wrapper.request didReceiveError:wrapper.error];
     }];
     return theWrapper;
 }

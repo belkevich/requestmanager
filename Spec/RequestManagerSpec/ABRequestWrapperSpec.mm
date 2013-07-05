@@ -195,7 +195,7 @@ describe(@"Blocks", ^
         }];
         [wrapper setUnreachable];
         theWrapper should equal(wrapper);
-        [error isReachabilityError] should equal(YES);
+        error.code should equal(101);
     });
 
     it(@"should run 'complete'-block in the creation thread", ^

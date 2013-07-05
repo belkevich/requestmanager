@@ -14,7 +14,4 @@
 - (void)request:(NSURLRequest *)request didReceiveResponse:(id)response;
 - (void)request:(NSURLRequest *)request didReceiveError:(NSError *)error;
 
-@optional
-- (void)requestDidBecomeUnreachable:(NSURLRequest *)request;
-
 @end

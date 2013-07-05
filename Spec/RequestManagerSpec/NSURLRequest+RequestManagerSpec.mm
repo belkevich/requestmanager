@@ -12,7 +12,6 @@
 #import "ABRequestWrapper.h"
 #import "ABMultiton.h"
 #import "OCFuntime.h"
-#import "NSError+Reachability.h"
 #import "SCNetworkReachability.h"
 
 @interface NSURLRequest ()
@@ -137,29 +136,10 @@ describe(@"Delegate", ^
         with(request).and_with(error);
     });
 
-    it(@"should send unreachable to delegate on reachability lost", ^
-    {
-        delegateMock stub_method(@selector(requestDidBecomeUnreachable:));
-        [wrapper setUnreachable];
-        delegateMock should have_received(@selector(requestDidBecomeUnreachable:)).with(request);
-    });
-
-    it(@"should send error to delegate on reachability lost if method not implemented", ^
+    it(@"should send error to delegate on reachability lost", ^
     {
         delegateMock stub_method(@selector(request:didReceiveError:));
-        // workaround for optional delegate method remove when it will be fixed in Cedar
-        OCFuntime *funtime = [[OCFuntime alloc] init];
-        [funtime changeClass:[CDRProtocolFake class] instanceMethod:@selector(respondsToSelector:)
-              implementation:^
-              {
-                  return NO;
-              }];
-        // end
         [wrapper setUnreachable];
-        // remove workaround
-        [funtime revertClass:[CDRProtocolFake class]];
-        [funtime release];
-        // end
         delegateMock should have_received(@selector(request:didReceiveError:)).with(request).
         and_with(Arguments::any([NSError class]));
     });
@@ -218,7 +198,7 @@ describe(@"Blocks", ^
             theError = error;
         }];
         [wrapper setUnreachable];
-        [theError isReachabilityError] should be_truthy;
+        theError.code should equal(101);
     });
 });
 

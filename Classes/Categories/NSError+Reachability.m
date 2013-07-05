@@ -9,25 +9,14 @@
 
 #import "NSError+Reachability.h"
 
-const NSString *kErrorReachabilityDomain = @"Internet reachability";
-const NSString *kErrorReachabilityDescription = @"Host is not reachable";
-const NSUInteger kErrorReachabilityCode = 101;
 
 @implementation NSError (Reachability)
 
 + (NSError *)errorReachability
 {
-    NSDictionary *userInfo = [NSDictionary dictionaryWithObject:kErrorReachabilityDescription
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObject:@"Host is not reachable"
                                                          forKey:NSLocalizedDescriptionKey];
-    return [NSError errorWithDomain:kErrorReachabilityDomain code:kErrorReachabilityCode
-                           userInfo:userInfo];
+    return [NSError errorWithDomain:@"Internet reachability" code:101 userInfo:userInfo];
 }
-
-- (BOOL)isReachabilityError
-{
-    return (self.code == kErrorReachabilityCode &&
-            [self.domain isEqualToString:(NSString *)kErrorReachabilityDomain]);
-}
-
 
 @end
