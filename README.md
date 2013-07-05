@@ -117,4 +117,4 @@ NSMutableURLRequest *requestCustom = [factory createRequest:url method:@"method"
 ```
 
 # Request manager specs
-[Here is BDD specs](https://github.com/belkevich/requestmanager-spec) 
+![Build status](https://api.travis-ci.org/belkevich/requestmanager.png) 
