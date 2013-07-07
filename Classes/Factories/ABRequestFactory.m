@@ -64,6 +64,18 @@
 }
 
 #pragma mark -
+#pragma mark properties
+
+- (ABRequestOptions *)options
+{
+    if (!_options)
+    {
+        _options = [[ABRequestOptions alloc] init];
+    }
+    return _options;
+}
+
+#pragma mark -
 #pragma mark private
 
 - (NSURL *)requestURLWithPath:(NSString *)path
@@ -89,15 +101,12 @@
 
 - (void)applyOptionsToRequest:(NSMutableURLRequest *)request
 {
-    if (self.options)
+    [request setHTTPShouldHandleCookies:self.options.cookies];
+    request.timeoutInterval = self.options.timeout;
+    request.cachePolicy = self.options.cache;
+    if (self.options.headers)
     {
-        [request setHTTPShouldHandleCookies:self.options.cookies];
-        request.timeoutInterval = self.options.timeout;
-        request.cachePolicy = self.options.cache;
-        if (self.options.headers)
-        {
-            [request setAllHTTPHeaderFields:self.options.headers];
-        }
+        [request setAllHTTPHeaderFields:self.options.headers];
     }
 }
 
