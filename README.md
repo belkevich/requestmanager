@@ -155,15 +155,83 @@ NSMutableURLRequest *request = [factory createGETRequest:@"news"]
 
 ## Advanced using
 
+Here are some advanced features of `ABRequestManager`
 #### Request wrapper
+Every request in **Request Manager** wrapped into `ABRequestWrapper`. Sometimes it's better to use wrapper instead of raw request.
+```objective-c
+ABRequestWrapper *wrapper = [[ABRequestWrapper alloc] initWithURLRequest:request];
+// set completed and failed blocks
+[wrapper setCompletedBlock:^(ABRequestWrapper *wrapper, id result)
+{
+    // do some completion actions
+    ...
+}              failedBlock:^(ABRequestWrapper *wrapper)
+{
+    // show error
+    ...
+}];
+// set parsing block
+[wrapper setParsingBlock:^id(ABRequestWrapper *wrapper)
+{
+    id result = nil;
+    // do parsing
+    ...
+    return result;
+}];
+
+```
 
 ---
 
 #### Request manager instance
+You aren't limited to only one `sharedInstance`. You can use custom instance of `ABRequestManager`. But in that case, you should use `ABRequestWrapper` instead of `NSMutableURLRequest`
+```objective-c
+ABRequestManager *manager = [[ABRequestManager alloc] init];
+ABRequestWrapper *wrapper = [[ABRequestWrapper alloc] initWithURLRequest:request];
+[wrapper setCompletedBlock:^(ABRequestWrapper *wrapper, id result)
+{
+    MyModel *model = [[MyModel alloc] initWithData:wrapper.data];
+    [self updateViewWithModel:model];
+}              failedBlock:^(ABRequestWrapper *wrapper)
+{
+    [UIAlertView showError:wrapper.error.localizedDescription];
+}];
+[manager addRequestWrapper:wrapper];
+
+```
 
 --- 
 
 #### Request manager queue
+Here is good example of complex task with easy solution. Imagine. Application deal with API that requires access via token. When token is expired it returns HTTP-code [401](http://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_Error). And if application received this code, it should send 'get access token' request. And then retry last request.
+```objective-c
+ABRequestWrapper *wrapper = [[ABRequestWrapper alloc] initWithURLRequest:request];
+[wrapper setCompletedBlock:^(ABRequestWrapper *wrapper, id result)
+{
+    if (wrapper.response.statusCode == 200)
+    {
+        // everything is OK, do something with result 
+        ...
+    }
+    else if (wrapper.response.statusCode == 401)
+    {
+        // send 'get access token'
+        ABRequestWrapper *getTokenWrapper= [self getAccessTokenRequestWrapper];
+        [[ABRequestManager sharedInstance] addRequestWrapperFirst:getTokenWrapper];
+        // retry current requeset
+        [[ABRequestManager sharedInstance] addRequestWrapper:wrapper];
+    }
+    else
+    {
+        // handle other status codes
+        ...
+    }
+}              failedBlock:^(ABRequestWrapper *wrapper)
+{
+    [UIAlertView showError:wrapper.error.localizedDescription];
+}];
+
+```
 
 ---
 
@@ -178,6 +246,7 @@ First of all you can set host which reachability should be checked.
 }
 ...
 ```
+
 ###### Note
 > Default reachability check host is "http://google.com"
 

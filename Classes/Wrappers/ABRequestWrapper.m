@@ -11,12 +11,12 @@
 #import "NSError+Reachability.h"
 
 @interface ABRequestWrapper ()
-
+// change properties accessors
 @property (nonatomic, strong, readwrite) NSURLRequest *request;
 @property (nonatomic, strong, readwrite) NSHTTPURLResponse *response;
 @property (nonatomic, strong, readwrite) NSData *data;
 @property (nonatomic, strong, readwrite) NSError *error;
-
+// block helper
 @property (nonatomic, strong) ABBlockHelper *blockHelper;
 
 @end
@@ -48,7 +48,6 @@
     }
     return self;
 }
-
 
 #pragma mark -
 #pragma mark blocks
