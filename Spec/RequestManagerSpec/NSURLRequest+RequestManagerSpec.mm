@@ -8,10 +8,9 @@
 
 #import "CedarAsync.h"
 #import "NSURLRequest+RequestManager.h"
+#import "ABRequestWrapper_RequestManager.h"
 #import "ABRequestManager+Spec.h"
-#import "ABRequestWrapper.h"
 #import "ABMultiton.h"
-#import "OCFuntime.h"
 #import "SCNetworkReachability.h"
 
 @interface NSURLRequest ()

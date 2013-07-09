@@ -9,10 +9,10 @@
 #import "ABRequestManager.h"
 #import "ABMultiton.h"
 #import "ABConnectionHelper.h"
-#import "ABRequestWrapper.h"
 #import "SCNetworkReachability.h"
 #import "NSMutableArray+Queue.h"
 #import "NSMutableArray+Request.h"
+#import "ABRequestWrapper_RequestManager.h"
 
 NSString * const kABDefaultReachabilityHost = @"google.com";
 

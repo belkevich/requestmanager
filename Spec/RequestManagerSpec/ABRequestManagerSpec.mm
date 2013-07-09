@@ -8,8 +8,8 @@
 
 #import "ABRequestManager+Spec.h"
 #import "ABConnectionHelper+Spec.h"
-#import "ABRequestWrapper.h"
 #import "SCNetworkReachability.h"
+#import "ABRequestWrapper_RequestManager.h"
 
 using namespace Cedar::Matchers;
 using namespace Cedar::Doubles;

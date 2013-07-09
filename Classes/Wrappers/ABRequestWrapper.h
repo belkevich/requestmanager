@@ -28,9 +28,5 @@
 - (void)setCompletedBlock:(ABWrapperCompletedBlock)completedBlock
               failedBlock:(ABWrapperFailedBlock)failedBlock;
 - (void)setParsingBlock:(ABWrapperDataParsingBlock)parsingBlock;
-// actions
-- (void)setReceivedData:(NSData *)data response:(NSHTTPURLResponse *)response;
-- (void)setReceivedError:(NSError *)anError;
-- (void)setUnreachable;
 
 @end

@@ -6,13 +6,12 @@
 //  Copyright (c) 2013 Okolodev. All rights reserved.
 //
 
-#import "ABRequestManager.h"
+#import "ABRequestManager_Spec.h"
 #import "SCNetworkReachability.h"
 
-@interface ABRequestManager (Spec) <SCNetworkReachabilityDelegate>
+@interface ABRequestManager (Spec)
 
 @property (nonatomic, readonly) NSMutableArray *queue;
 @property (nonatomic, retain) ABConnectionHelper *connection;
-@property (nonatomic, retain) SCNetworkReachability *reachability;
 
 @end

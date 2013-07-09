@@ -7,9 +7,8 @@
 //
 
 #import "CedarAsync.h"
-#import "ABRequestWrapper.h"
 #import "OCFuntime.h"
-#import "NSError+Reachability.h"
+#import "ABRequestWrapper_RequestManager.h"
 
 using namespace Cedar::Matchers;
 using namespace Cedar::Doubles;

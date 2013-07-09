@@ -92,6 +92,8 @@
 		FA55F63C178592870092712C /* ABRequestWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABRequestWrapper.m; sourceTree = "<group>"; };
 		FA55F63D178592870092712C /* ABWrapperBlocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABWrapperBlocks.h; sourceTree = "<group>"; };
 		FA55F63E178592870092712C /* ABWrapperDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABWrapperDelegate.h; sourceTree = "<group>"; };
+		FAA1346B178CABCD00B99B0D /* ABRequestWrapper_RequestManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ABRequestWrapper_RequestManager.h; path = ../Managers/ABRequestWrapper_RequestManager.h; sourceTree = "<group>"; };
+		FAE82774178CAD6700A028E4 /* ABRequestManager_Spec.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ABRequestManager_Spec.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -171,6 +173,7 @@
 			children = (
 				FA55F613178592690092712C /* ABConnectionHelper+Spec.h */,
 				FA55F614178592690092712C /* ABConnectionHelper+Spec.m */,
+				FAE82774178CAD6700A028E4 /* ABRequestManager_Spec.h */,
 				FA55F615178592690092712C /* ABRequestManager+Spec.h */,
 				FA55F616178592690092712C /* ABRequestManager+Spec.m */,
 				FA55F617178592690092712C /* NSData+DataWithResource.h */,
@@ -183,9 +186,9 @@
 			isa = PBXGroup;
 			children = (
 				FA55F5AA17857FC40092712C /* ABConnectionHelperSpec.mm */,
-				FA55F5AB17857FC40092712C /* ABRequestFactorySpec.mm */,
 				FA55F5AE17857FC40092712C /* ABRequestManagerSpec.mm */,
 				FA55F5AF17857FC40092712C /* ABRequestWrapperSpec.mm */,
+				FA55F5AB17857FC40092712C /* ABRequestFactorySpec.mm */,
 				FA55F5B217857FC40092712C /* NSURLRequest+RequestManagerSpec.mm */,
 			);
 			name = Spec;
@@ -288,11 +291,12 @@
 		FA55F639178592870092712C /* Wrappers */ = {
 			isa = PBXGroup;
 			children = (
-				FA55F63A178592870092712C /* ABRequestDelegate.h */,
 				FA55F63B178592870092712C /* ABRequestWrapper.h */,
 				FA55F63C178592870092712C /* ABRequestWrapper.m */,
 				FA55F63D178592870092712C /* ABWrapperBlocks.h */,
 				FA55F63E178592870092712C /* ABWrapperDelegate.h */,
+				FA55F63A178592870092712C /* ABRequestDelegate.h */,
+				FAA1346B178CABCD00B99B0D /* ABRequestWrapper_RequestManager.h */,
 			);
 			path = Wrappers;
 			sourceTree = "<group>";
