@@ -145,8 +145,12 @@ NSString * const kABDefaultReachabilityHost = @"google.com";
         [connection stop];
         switch (status)
         {
+#if TARGET_OS_IPHONE
             case SCNetworkStatusReachableViaCellular:
             case SCNetworkStatusReachableViaWiFi:
+#else
+            case SCNetworkStatusReachable:
+#endif
                 wrapper = [queue head];
                 [self runConnectionWithRequest:wrapper.request];
                 break;

@@ -20,7 +20,8 @@
     self = [super init];
     if (self)
     {
-        NSString *name = [NSString stringWithFormat:@"%d.org.okolodev.parsing", self.hash];
+        unsigned long hash = (unsigned long)self.hash;
+        NSString *name = [NSString stringWithFormat:@"%ld.org.okolodev.parsing", hash];
         queue = dispatch_queue_create([name cStringUsingEncoding:NSASCIIStringEncoding], NULL);
     }
     return self;
