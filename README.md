@@ -7,7 +7,7 @@ Request manager is a simple way to run network requests. It requires only instan
 ---
 
 ## Installation
-The recommended way to install **Request Manager** in your project is via [CocoaPods](http://cocoapods.org/). It's very easy. Just add `requestmanager` pod to your Podfile
+The recommended way to install **Request Manager** in your project is via [CocoaPods](http://cocoapods.org/). It's very easy. Just add `ABRequestManager` pod to your Podfile
 
 ---
 
