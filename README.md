@@ -248,7 +248,7 @@ First of all you can set host which reachability should be checked.
 ```
 
 ###### Note
-> Default reachability check host is "http://google.com"
+> Default reachability check host is "www.google.com"
 
 ---
 
