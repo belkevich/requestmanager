@@ -2,7 +2,7 @@ ABRequestManager
 ============
 
 ## About
-Request manager is lightweight and extensible request manager for iOS/OS X. It requires only instance of NSURLRequest (or NSMutableURLRequest). All requests are stored in the queue. Request manager pulls the head request from queue and run it. And so on until queue is empty.
+ABRequestManager is a lightweight and extensible request manager for iOS/OS X. It requires only instance of NSURLRequest (or NSMutableURLRequest). All requests are stored in the queue. Request manager pulls the head request from queue and run it. And so on until queue is empty.
 
 ---
 
