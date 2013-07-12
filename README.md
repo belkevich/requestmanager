@@ -1,8 +1,8 @@
-Lightweight and extensible request manager for iOS/OS X
+ABRequestManager
 ============
 
 ## About
-Request manager is a simple way to run network requests. It requires only instance of NSURLRequest (or NSMutableURLRequest). All requests are stored in the queue. Request manager pulls the head request from queue and run it. And so on until queue is empty.
+Request manager is lightweight and extensible request manager for iOS/OS X. It requires only instance of NSURLRequest (or NSMutableURLRequest). All requests are stored in the queue. Request manager pulls the head request from queue and run it. And so on until queue is empty.
 
 ---
 
