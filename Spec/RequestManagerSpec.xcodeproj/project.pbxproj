@@ -40,8 +40,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		40A768C60DD799E1DBC2A9BE /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		B9283C971ECE4572B11A56AB /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		C8894620D65B490998E3DA1C /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 		FA55F588178570300092712C /* RequestManagerSpec.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RequestManagerSpec.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA55F58B178570300092712C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		FA55F58D178570300092712C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -94,6 +94,7 @@
 		FA55F63E178592870092712C /* ABWrapperDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABWrapperDelegate.h; sourceTree = "<group>"; };
 		FAA1346B178CABCD00B99B0D /* ABRequestWrapper_RequestManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ABRequestWrapper_RequestManager.h; path = ../Managers/ABRequestWrapper_RequestManager.h; sourceTree = "<group>"; };
 		FAE82774178CAD6700A028E4 /* ABRequestManager_Spec.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ABRequestManager_Spec.h; sourceTree = "<group>"; };
+		FDAA636362564BEE031D5B7B /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +113,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F62B6838065E9AAFD6EC6550 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				40A768C60DD799E1DBC2A9BE /* Pods.debug.xcconfig */,
+				FDAA636362564BEE031D5B7B /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		FA55F57F178570300092712C = {
 			isa = PBXGroup;
 			children = (
@@ -119,7 +129,7 @@
 				FA55F591178570300092712C /* RequestManagerSpec */,
 				FA55F58A178570300092712C /* Frameworks */,
 				FA55F589178570300092712C /* Products */,
-				C8894620D65B490998E3DA1C /* Pods.xcconfig */,
+				F62B6838065E9AAFD6EC6550 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -385,7 +395,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
 		};
 		AFC36D1E96E74D0BAA15A173 /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -501,7 +511,7 @@
 		};
 		FA55F5A6178570310092712C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C8894620D65B490998E3DA1C /* Pods.xcconfig */;
+			baseConfigurationReference = 40A768C60DD799E1DBC2A9BE /* Pods.debug.xcconfig */;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -519,7 +529,7 @@
 		};
 		FA55F5A7178570310092712C /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C8894620D65B490998E3DA1C /* Pods.xcconfig */;
+			baseConfigurationReference = FDAA636362564BEE031D5B7B /* Pods.release.xcconfig */;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_ENABLE_OBJC_ARC = YES;
